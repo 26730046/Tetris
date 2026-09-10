@@ -1,0 +1,159 @@
+\documentclass[12pt,a4paper]{report}
+
+% ==============================================================================
+% GÓI CẤU HÌNH & TIẾNG VIỆT
+% ==============================================================================
+\usepackage[utf8]{inputenc}
+\usepackage[T5,T1]{fontenc}
+\usepackage[vietnamese]{babel}
+\usepackage[left=1.5cm,right=1.5cm,top=2cm,bottom=2cm]{geometry}
+
+% Gói đồ họa & bảng biểu
+\usepackage{graphicx}
+\usepackage{float}
+\usepackage{booktabs}
+\usepackage{tabularx}
+\usepackage{multirow}
+\usepackage{longtable}
+\usepackage{array}
+
+% Gói màu sắc & liên kết
+\usepackage{xcolor}
+\usepackage{hyperref}
+\hypersetup{
+    colorlinks=true,
+    linkcolor=blue!80!black,
+    citecolor=blue!80!black,
+    urlcolor=blue!70!black,
+    pdfauthor={Nhóm SS004},
+    pdftitle={SS004 - Đồ án cuối kỳ - Trò chơi Tetris}
+}
+
+% Gói định dạng code
+\usepackage{listings}
+\definecolor{codegreen}{rgb}{0,0.6,0}
+\definecolor{codegray}{rgb}{0.5,0.5,0.5}
+\definecolor{codepurple}{rgb}{0.58,0,0.82}
+\definecolor{backcolour}{rgb}{0.96,0.96,0.96}
+
+\lstdefinestyle{mystyle}{
+    backgroundcolor=\color{backcolour},   
+    commentstyle=\color{codegreen},
+    keywordstyle=\color{magenta},
+    numberstyle=\tiny\color{codegray},
+    stringstyle=\color{codepurple},
+    basicstyle=\ttfamily\footnotesize,
+    breakatwhitespace=false,         
+    breaklines=true,                 
+    captionpos=b,                    
+    keepspaces=true,                 
+    numbers=left,                    
+    numbersep=5pt,                  
+    showspaces=false,                
+    showstringspaces=false,
+    showtabs=false,                  
+    tabsize=2
+}
+\lstset{style=mystyle}
+
+% Gói header & footer
+\usepackage{fancyhdr}
+\setlength{\headheight}{15pt}
+\addtolength{\topmargin}{-3pt}
+\pagestyle{fancy}
+\fancyhf{}
+\fancyhead[L]{\small\textit{Môn Kỹ năng nghề nghiệp - SS004.F31.CN1.CNTT}}
+\fancyhead[R]{\small\textit{Đồ án: Trò chơi Tetris}}
+\fancyfoot[C]{\thepage}
+\renewcommand{\headrulewidth}{0.4pt}
+\renewcommand{\footrulewidth}{0.4pt}
+
+% Gói định dạng danh sách và tiêu đề
+\usepackage{enumitem}
+\usepackage{titlesec}
+\titleformat{\chapter}[display]
+  {\normalfont\bfseries\huge\color{blue!70!black}}
+  {\chaptertitlename\ \thechapter}{15pt}{\Huge}
+\titlespacing*{\chapter}{0pt}{10pt}{20pt}
+
+% ==============================================================================
+% BẮT ĐẦU TÀI LIỆU
+% ==============================================================================
+\begin{document}
+
+% ------------------------------------------------------------------------------
+% TRANG BÌA
+% ------------------------------------------------------------------------------
+\begin{titlepage}
+    \begin{center}
+        \textbf{\large ĐẠI HỌC QUỐC GIA TP. HỒ CHÍ MINH}\\[0.2cm]
+        \textbf{\large TRƯỜNG ĐẠI HỌC CÔNG NGHỆ THÔNG TIN}\\[0.2cm]
+        
+        \includegraphics[width=0.25\textwidth]{assest/Logo_uit.jpg}\\[0.8cm]
+        
+        \textbf{\Large BÁO CÁO ĐỒ ÁN CUỐI KỲ}\\[0.3cm]
+        \textbf{\LARGE MÔN: KỸ NĂNG NGHỀ NGHIỆP}\\[0.2cm]
+        \textbf{\large MÃ LỚP: SS004.F31.CN1.CNTT}\\[0.8cm]
+        
+        \rule{\textwidth}{1.5pt}\\[0.3cm]
+        \textbf{\huge ĐỀ TÀI: XÂY DỰNG VÀ PHÁT TRIỂN}\\[0.2cm]
+        \textbf{\huge TRÒ CHƠI TETRIS (XẾP GẠCH)}\\[0.2cm]
+        \rule{\textwidth}{1.5pt}\\[0.8cm]
+        
+        \begin{table}[H]
+            \centering
+            \begin{tabular}{lll}
+                \textbf{Giảng viên hướng dẫn:} & \multicolumn{2}{l}{Nguyễn Văn Toàn} \\[0.3cm]
+                \textbf{Sinh viên thực hiện:}  & & \\[0.1cm]
+                \quad 1. Phạm Ngọc Hoàng Long  & MSSV: 26730046 & Nhóm trưởng \\
+                \quad 2. Huỳnh Thị Kim Anh     & MSSV: 26730002 & Thành viên \\
+                \quad 3. Hoàng Gia Huy         & MSSV: 26730026 & Thành viên \\
+                \quad 4. Lê Thành Nam          & MSSV: 26730050 & Thành viên \\
+                \quad 5. Phạm Mạnh Thiên Phúc  & MSSV: 26730057 & Thành viên \\
+            \end{tabular}
+        \end{table}
+        
+        \vfill
+        \textbf{TP. Hồ Chí Minh, Năm 2026}
+    \end{center}
+\end{titlepage}
+
+% ------------------------------------------------------------------------------
+% MỤC LỤC & DANH MỤC
+% ------------------------------------------------------------------------------
+\newpage
+\pagenumbering{roman}
+\tableofcontents
+\newpage
+\listoffigures
+\newpage
+\listoftables
+\newpage
+
+% ------------------------------------------------------------------------------
+% NỘI DUNG CHÍNH (GÔM CÁC PHẦN QUA FILE CHÍNH CỦA MỖI THƯ MỤC)
+% ------------------------------------------------------------------------------
+\pagenumbering{arabic}
+
+% Mục 1: Hợp đồng nhóm
+\input{01_hop_dong_nhom/main.tex}
+
+% Mục 2: Các link Trello/Git/Slack/Overleaf
+\input{02_cac_lien_ket/main.tex}
+
+% Mục 3: Giới thiệu và hướng dẫn chơi game
+\input{03_gioi_thieu_va_huong_dan/main.tex}
+
+% Mục 4: Tài liệu kỹ thuật của trò chơi
+\input{04_tai_lieu_ky_thuat/main.tex}
+
+% Mục 5: Mô tả quá trình làm việc nhóm
+\input{05_qua_trinh_lam_viec_nhom/main.tex}
+
+% Mục 6: Các kỹ năng mà nhóm đã áp dụng
+\input{06_ky_nang_ap_dung/main.tex}
+
+% Mục 7: Đánh giá việc thực hiện hợp đồng nhóm
+\input{07_danh_gia_hop_dong/main.tex}
+
+\end{document}

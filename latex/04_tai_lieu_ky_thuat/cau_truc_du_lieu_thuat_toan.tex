@@ -1,0 +1,24 @@
+\section{Cấu trúc dữ liệu và Thuật toán cốt lõi}
+
+\subsection{Cấu trúc dữ liệu chính}
+% [Gợi ý nội dung: 
+% 1. Ma trận bàn cờ: char board[H][W] kích thước H x W với các viền '#' và khoảng trống ' '
+% 2. Mảng khối gạch: char blocks[][4][4] định nghĩa các trạng thái xoay của 7 khối Tetromino
+% 3. Các biến trạng thái: tọa độ x, y, chỉ số khối b, điểm số score...]
+\textit{[Nội dung bổ sung sau: Phân tích chi tiết các mảng và biến toàn cục/cục bộ]}
+
+\subsection{Thuật toán kiểm tra va chạm (\texttt{canMove})}
+% [Gợi ý nội dung: Thuật toán duyệt qua ma trận 4x4 của khối hiện tại tại vị trí dự kiến (x + dx, y + dy), kiểm tra biên bàn cờ (xt < 1 || xt >= W-1 || yt >= H-1) và kiểm tra trùng lặp với các khối đã xếp trước đó]
+\textit{[Nội dung bổ sung sau: Mã giả, đoạn code minh họa và phân tích độ phức tạp thuật toán]}
+
+\subsection{Thuật toán ghi nhận và xóa khối trên bảng (\texttt{block2Board}, \texttt{boardDelBlock})}
+% [Gợi ý nội dung: Quy trình gắn khối vào bảng khi chạm đáy hoặc xóa vị trí cũ khi đang rơi để vẽ vị trí mới]
+\textit{[Nội dung bổ sung sau: Phân tích xử lý cập nhật trạng thái bàn cờ]}
+
+\subsection{Thuật toán kiểm tra và xóa dòng đầy (\texttt{removeLine})}
+% [Gợi ý nội dung: Duyệt từng hàng từ dưới lên trên, nếu tất cả các ô trong hàng khác ' ' thì dồn tất cả các hàng phía trên xuống 1 bậc, tạo hiệu ứng xóa dòng và cộng điểm]
+\textit{[Nội dung bổ sung sau: Sơ đồ thuật toán xóa dòng và cập nhật ma trận]}
+
+\subsection{Thuật toán xoay khối gạch (Rotation Algorithm)}
+% [Gợi ý nội dung: Cơ chế chuyển đổi trạng thái giữa các góc xoay 0, 90, 180, 270 độ, kiểm tra tính hợp lệ sau khi xoay (Wall Kick nếu có)]
+\textit{[Nội dung bổ sung sau: Cơ chế xoay khối gạch và xử lý va chạm khi xoay]}
