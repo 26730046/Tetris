@@ -1,23 +1,6 @@
-\documentclass[14pt]{extarticle}
-\usepackage[utf8]{inputenc}
-\usepackage[T5]{fontenc}
-\usepackage[vietnamese]{babel}
-\usepackage{amsmath}
-\usepackage{amssymb}
-\usepackage{graphicx}
-\usepackage[margin=1in]{geometry}
-\usepackage{titlesec}
+\section{Tổng quan về trò chơi Tetris}
 
-\titleformat{\section}
-  {\normalfont\LARGE\bfseries}{\thesection}{1em}{}
-
-\title{\Huge Tổng quan về trò chơi Tetris}
-
-\begin{document}
-
-\maketitle
-
-\section{Bối cảnh và lịch sử ra đời của Tetris}
+\subsection{Bối cảnh và lịch sử ra đời của Tetris}
 
 Tetris là một trong những trò chơi điện tử có sức ảnh hưởng lớn nhất trong lịch sử ngành công nghiệp game, được xem là biểu tượng tiêu biểu của thể loại \textit{puzzle} (trò chơi giải đố). Trò chơi được sáng tạo bởi \textbf{Alexey Pajitnov}, một kỹ sư phần mềm người Nga, vào năm 1984 khi ông đang làm việc tại Trung tâm Tính toán thuộc Viện Hàn lâm Khoa học Liên Xô (Dorodnicyn Computing Centre). Ý tưởng của trò chơi được lấy cảm hứng từ \textit{pentomino}, một dạng bài toán sắp xếp hình học cổ điển, kết hợp với niềm đam mê của Pajitnov đối với các trò chơi giải đố mang tính logic.
 
@@ -25,7 +8,7 @@ Tên gọi \textit{Tetris} được ghép từ hai thành phần: tiền tố \t
 
 Sự ra đời của Tetris đánh dấu một bước ngoặt quan trọng trong sự phát triển của thể loại game giải đố (puzzle game). Trước Tetris, thể loại này thường gắn liền với các bài toán logic tĩnh hoặc trò chơi cờ bàn được số hóa. Tetris đã đưa vào yếu tố \textit{thời gian thực} (real-time) và \textit{áp lực tốc độ}, buộc người chơi phải đưa ra quyết định nhanh chóng, từ đó tạo nên một hướng đi mới cho thể loại puzzle: kết hợp giữa tư duy logic và phản xạ. Nhờ đó, Tetris không chỉ trở thành nền tảng cho hàng loạt tựa game giải đố sau này (như Columns, Dr. Mario, Puyo Puyo) mà còn được ghi nhận là một trong những trò chơi có ảnh hưởng sâu rộng nhất đến văn hóa đại chúng và ngành công nghiệp game toàn cầu.
 
-\section{Mục tiêu và đối tượng người chơi}
+\subsection{Mục tiêu và đối tượng người chơi}
 
 Mục tiêu cốt lõi của Tetris là sắp xếp các khối hình (\textit{tetromino}) rơi từ trên xuống sao cho chúng lấp đầy hoàn toàn từng hàng ngang trên bảng chơi. Khi một hàng được lấp đầy, hàng đó sẽ biến mất và người chơi được cộng điểm, đồng thời không gian trên bảng chơi được giải phóng. Trò chơi kết thúc khi các khối hình chồng lên nhau đến mức chạm tới đỉnh của bảng chơi, không còn chỗ trống để tiếp tục sắp xếp.
 
@@ -37,7 +20,7 @@ Về đối tượng người chơi, Tetris hướng đến một phạm vi rấ
     \item \textbf{Người chơi hoài cổ (retro gamer)}: nhờ vào lịch sử lâu đời, Tetris cũng thu hút nhóm người chơi yêu thích phong cách đồ họa và lối chơi mang hơi hướng game cổ điển.
 \end{itemize}
 
-\section{Các tính năng nổi bật của game}
+\subsection{Các tính năng nổi bật của game}
 
 Phiên bản Tetris được phát triển trong dự án này tập trung tái hiện các đặc trưng kinh điển của trò chơi gốc, đồng thời tối ưu hóa trải nghiệm trên nền tảng console. Các tính năng nổi bật bao gồm:
 
@@ -54,5 +37,3 @@ Phiên bản Tetris được phát triển trong dự án này tập trung tái 
     
     \item \textbf{Lưu trạng thái điểm cao (high score)}: Ghi nhận và lưu trữ điểm số cao nhất mà người chơi đạt được, tạo yếu tố khuyến khích người chơi quay lại thử thách bản thân.
 \end{itemize}
-
-\end{document}
