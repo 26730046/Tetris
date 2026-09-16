@@ -51,8 +51,8 @@ Tetris/
 
 ## 🔗 Các Liên Kết Dự Án
 
-- **Trello (Quản lý tiến độ):** `[Link Trello của nhóm]`
-- **GitHub (Quản lý source):** `[Link Repo GitHub]`
-- **Overleaf (Soạn thảo LaTeX):** `[Link Dự án Overleaf]`
-- **Slack (Kênh trao đổi nhóm):** `[Link Kênh giao tiếp]`
+- **Trello (Quản lý tiến độ):** [https://trello.com/invite/b/6aa188aa2f75faeccf5ebbaf/ATTI1a9f8836e1c759ebe41c00396a016869FF68DB50/tetris](https://trello.com/invite/b/6aa188aa2f75faeccf5ebbaf/ATTI1a9f8836e1c759ebe41c00396a016869FF68DB50/tetris)
+- **GitHub (Quản lý source):** [https://github.com/26730046/Tetris](https://github.com/26730046/Tetris)
+- **Overleaf (Soạn thảo LaTeX):** [https://www.overleaf.com/read/kpymwszxcbmn#4c9919](https://www.overleaf.com/read/kpymwszxcbmn#4c9919)
+- **Slack (Kênh trao đổi nhóm):** [https://app.slack.com/client/T0BGG4XP66M/C0BV4TA3E0N](https://app.slack.com/client/T0BGG4XP66M/C0BV4TA3E0N)
 
