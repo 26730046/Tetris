@@ -44,3 +44,4 @@ example/*
 *.gz
 *.toc
 *.pdf
+*.synctex(busy)
