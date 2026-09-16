@@ -1,8 +1,66 @@
 \section{Luật chơi và Cơ chế tính điểm}
 
 \subsection{Các loại khối gạch (Tetrominoes)}
-% [Gợi ý nội dung: Giới thiệu 7 loại khối chuẩn I, O, T, S, Z, J, L, hình dạng ma trận 4x4 và màu sắc/ký tự hiển thị tương ứng]
-\textit{[Nội dung bổ sung sau: Mô tả chi tiết 7 khối Tetromino]}
+Tetromino là hình khối được tạo thành từ 4 ô vuông ghép lại với nhau theo các cạnh.
+Trong Tetris có đúng 7 loại tetromino chuẩn: \textbf{I, O, T, S, Z, J, L}.
+
+\subsubsection{Hình dạng ma trận 4$\times$4 của từng khối}
+
+\begin{center}
+\begin{tabular}{ccc}
+\textbf{I} & \textbf{O} & \textbf{T} \\
+\texttt{....} & \texttt{.XX.} & \texttt{.X..} \\
+\texttt{XXXX} & \texttt{.XX.} & \texttt{XXX.} \\
+\texttt{....} & \texttt{....} & \texttt{....} \\
+\texttt{....} & \texttt{....} & \texttt{....} \\
+\end{tabular}
+\end{center}
+
+\begin{center}
+\begin{tabular}{ccc}
+\textbf{S} & \textbf{Z} & \textbf{J} \\
+\texttt{.XX.} & \texttt{XX..} & \texttt{X...} \\
+\texttt{XX..} & \texttt{.XX.} & \texttt{XXX.} \\
+\texttt{....} & \texttt{....} & \texttt{....} \\
+\texttt{....} & \texttt{....} & \texttt{....} \\
+\end{tabular}
+\end{center}
+
+\begin{center}
+\begin{tabular}{c}
+\textbf{L} \\
+\texttt{..X.} \\
+\texttt{XXX.} \\
+\texttt{....} \\
+\texttt{....} \\
+\end{tabular}
+\end{center}
+
+\subsubsection{Bảng màu sắc, ký tự đại diện và đặc điểm xoay của các Tetromino}
+
+\begin{table}[H]
+\centering
+\begin{tabular}{|c|c|c|c|p{5cm}|}
+\hline
+\textbf{Khối} & \textbf{Ký tự} & \textbf{Màu chuẩn} & \textbf{Số trạng thái xoay} & \textbf{Ghi chú} \\
+\hline
+I & I & Cyan & 2 & Đối xứng qua tâm \\
+\hline
+O & O & Vàng & 1 & Không đổi hình khi xoay \\
+\hline
+T & T & Tím & 4 & Không đối xứng \\
+\hline
+S & S & Xanh lá & 2 & Đối xứng qua tâm \\
+\hline
+Z & Z & Đỏ & 2 & Đối xứng qua tâm \\
+\hline
+J & J & Xanh dương & 4 & Ảnh gương của khối L \\
+\hline
+L & L & Cam & 4 & Ảnh gương của khối J \\
+\hline
+\end{tabular}
+\caption{Đặc điểm 7 loại Tetromino}
+\end{table}
 
 \subsection{Quy tắc xếp hình và Xóa dòng}
 % [Gợi ý nội dung: Quy tắc rơi từ đỉnh xuống đáy, va chạm, ghép nối lấp đầy các hàng ngang để ghi điểm, kết thúc khi khối gạch chạm nóc (Game Over)]
