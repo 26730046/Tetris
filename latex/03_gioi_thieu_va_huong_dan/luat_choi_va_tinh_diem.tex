@@ -64,8 +64,42 @@ L & L & Cam & 4 & Ảnh gương của khối J \\
 
 \subsection{Quy tắc xếp hình và Xóa dòng}
 % [Gợi ý nội dung: Quy tắc rơi từ đỉnh xuống đáy, va chạm, ghép nối lấp đầy các hàng ngang để ghi điểm, kết thúc khi khối gạch chạm nóc (Game Over)]
-\textit{[Nội dung bổ sung sau: Chi tiết quy tắc xếp và xử lý va chạm, kết thúc lượt chơi]}
+Trong trò chơi Tetris, không gian chơi được biểu diễn bằng một ma trận hai chiều (chuẩn kích thước $10 \times 20$ ô). Quá trình xếp hình và xử lý xóa dòng diễn ra theo các quy tắc sau:
 
+\begin{itemize}
+    \item \textbf{Cơ chế va chạm và cố định (Lock Down):} Khối gạch (Tetromino) di chuyển rơi tự do xuống dưới theo từng chu kỳ thời gian. Khi chạm đáy hoặc bề mặt khối khác, hệ thống ngừng di chuyển và ghi đè giá trị của Tetromino vào ma trận bản đồ.
+    \item \textbf{Thuật toán kiểm tra dòng (Line Check):} Sau khi một khối được cố định, thuật toán tiến hành quét từng hàng của ma trận từ dưới lên trên. Một hàng hoàn thành khi tất cả các ô trong hàng đều được lấp đầy.
+    \item \textbf{Xử lý xóa dòng và dồn khối:} 
+    \begin{itemize}
+        \item Hệ thống giải phóng dữ liệu của các hàng đã đầy khỏi bộ nhớ.
+        \item Toàn bộ các hàng phía trên được dồn xuống dưới đúng số hàng vừa bị triệt tiêu.
+        \item Các hàng mới ở vị trí trên cùng được khởi tạo lại với trạng thái rỗng.
+    \end{itemize}
+\end{itemize}
 \subsection{Hệ thống tính điểm và Cấp độ (Level / Score System)}
 % [Gợi ý nội dung: Bảng điểm khi xóa 1 dòng (Single), 2 dòng (Double), 3 dòng (Triple), 4 dòng (Tetris), cơ chế tăng tốc độ rơi theo level]
-\textit{[Nội dung bổ sung sau: Bảng tính điểm và công thức tăng độ khó]}
+Hệ thống tính điểm và phân cấp độ được thiết kế để khuyến khích kỹ năng người chơi:
+
+\begin{table}[H]
+    \centering
+    \begin{tabular}{|l|c|l|}
+        \hline
+        \textbf{Hành động} & \textbf{Số dòng xóa} & \textbf{Công thức điểm thưởng} \\ \hline
+        Single & 1 & $100 \times \text{Level}$ \\ \hline
+        Double & 2 & $300 \times \text{Level}$ \\ \hline
+        Triple & 3 & $500 \times \text{Level}$ \\ \hline
+        Tetris & 4 & $800 \times \text{Level}$ \\ \hline
+        Soft Drop & - & 1 điểm cho mỗi ô rơi nhanh \\ \hline
+        Hard Drop & - & 2 điểm cho mỗi ô rơi tức thì \\ \hline
+    \end{tabular}
+    \caption{Bảng quy chuẩn điểm số thưởng}
+    \label{tab:scoring}
+\end{table}
+
+\begin{itemize}
+    \item \textbf{Điều kiện tăng cấp độ (Level Up):} Cứ sau khi xóa đủ 10 dòng, cấp độ người chơi tăng thêm 1 bậc:
+    \[
+    \text{Level} = \left\lfloor \frac{\text{Tổng số dòng đã xóa}}{10} \right\rfloor + 1
+    \]
+    \item \textbf{Tăng tốc độ rơi (Gravity):} Khi cấp độ càng cao, chu kỳ rơi tự do của khối gạch càng rút ngắn, đòi hỏi phản xạ nhanh hơn từ người chơi.
+\end{itemize}
