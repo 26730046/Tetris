@@ -1,6 +1,5 @@
 #include <iostream>
 #include <conio.h>
-#include <windows.h>
 
 using namespace std;
 #define H 20
@@ -103,16 +102,11 @@ void initBoard(){
             if (i == 0 || i == H-1 || j ==0 || j == W-1) board[i][j] = '#';
             else board[i][j] = ' ';
 }
-void drawCell(char c){
-    if (c == ' ') cout << "  ";
-    else if (c == '#') cout << "██"; 
-    else cout << "[]";
-}
 void draw(){
     system("cls");
 
     for (int i = 0 ; i < H ; i++, cout<<endl)
-        for (int j = 0 ; j < W ; j++) drawCell(board[i][j]);
+        for (int j = 0 ; j < W ; j++) cout<<board[i][j];
 }
 void removeLine(){
 
@@ -120,7 +114,6 @@ void removeLine(){
 
 int main()
 {
-    SetConsoleOutputCP(CP_UTF8);
     srand(time(0));
     x = 5; y = 0; b = rand()%7;
     initBoard();
