@@ -45,3 +45,4 @@ example/*
 *.toc
 *.pdf
 *.synctex(busy)
+require.md
