@@ -56,3 +56,27 @@ Tetris/
 - **Overleaf (Soạn thảo LaTeX):** [https://www.overleaf.com/read/kpymwszxcbmn#4c9919](https://www.overleaf.com/read/kpymwszxcbmn#4c9919)
 - **Slack (Kênh trao đổi nhóm):** [https://app.slack.com/client/T0BGG4XP66M/C0BV4TA3E0N](https://app.slack.com/client/T0BGG4XP66M/C0BV4TA3E0N)
 
+---
+
+## 📅 Phân Công Công Việc (Tuần 2)
+
+**Mục tiêu:** Ứng dụng Git vào làm việc nhóm và phát triển các tính năng cốt lõi của game Tetris đồng thời.
+
+- **SV1 - Phạm Ngọc Hoàng Long (Nhóm trưởng / PM):**
+  - Khởi tạo Git repository cho dự án.
+  - Xóa hàm `removeLine` khỏi code gốc và đưa bộ code cơ sở (cấu trúc dữ liệu cơ bản) lên branch `main`.
+  - Hỗ trợ các thành viên khác, review code trên Pull Request và thực hiện merge code vào nhánh `main` khi đã hoàn thiện.
+- **SV2 - Huỳnh Thị Kim Anh:** 
+  - Tạo branch riêng để làm việc.
+  - Lập trình hàm `removeLine()` (xử lý logic xóa dòng khi gạch lấp đầy hàng ngang và kéo các khối bên trên xuống).
+- **SV3 - Hoàng Gia Huy:** 
+  - Tạo branch riêng để làm việc.
+  - Viết lại giao diện hiển thị bảng và các khối gạch sao cho hình dáng trông vuông vức hơn (vì console hiện hành hiển thị dạng hình chữ nhật đứng).
+- **SV4 - Lê Thành Nam:** 
+  - Tạo branch riêng để làm việc.
+  - Nghiên cứu thuật toán xoay block và lập trình chức năng xoay khi người dùng nhấn phím điều hướng.
+- **SV5 - Phạm Mạnh Thiên Phúc:** 
+  - Tạo branch riêng để làm việc.
+  - Viết logic tăng độ khó: mỗi khi nhóm xoá được dòng (gọi hàm `removeLine` thành công), tốc độ rơi của khối sẽ được tăng lên (thời gian `sleep` giảm xuống).
+
+**Quy trình nộp bài:** Các thành viên sẽ tiến hành lập trình đồng thời trên các nhánh của mình. Xong việc thì submit (Push) lên Git repository và tạo yêu cầu gộp mã (Merge). Nhóm trưởng sẽ kiểm tra code ổn định trước khi hợp nhất.
