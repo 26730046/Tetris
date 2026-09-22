@@ -2,6 +2,7 @@
 #include <conio.h>
 
 using namespace std;
+int dropSpeed = 1000; // Thời gian rơi ban đầu là 1000ms (1 giây)
 #define H 20
 #define W 15
 char board[H][W] = {};
@@ -120,6 +121,10 @@ void removeLine(){
             i++;
             draw();
             _sleep(200);
+            // Logic tăng độ khó: giảm thời gian sleep
+                if (dropSpeed > 100) {
+                    dropSpeed -= 50; // Mỗi lần xóa dòng thì rơi nhanh hơn 50ms
+                }
         }
     }
 }
@@ -146,7 +151,7 @@ int main()
         }
         block2Board();
         draw();
-        _sleep(500);
+        _sleep(dropSpeed);
     }
     return 0;
 }
