@@ -1,6 +1,8 @@
 #include <iostream>
 #include <conio.h>
-#include <windows.h>
+#include <windows.h>   // cho Sleep()/_sleep(), SetConsoleOutputCP
+#include <cstdlib>     // cho rand(), srand(), system()
+#include <ctime>       // cho time()
 
 using namespace std;
 int dropSpeed = 1000; // Thời gian rơi ban đầu là 1000ms (1 giây)
@@ -9,7 +11,9 @@ int dropSpeed = 1000; // Thời gian rơi ban đầu là 1000ms (1 giây)
 char board[H][W] = {};
 
 int x, y, b;
-char blocks[][4][4] ={
+int dropSpeed = 500;   // THÊM: khai báo biến còn thiếu, tốc độ rơi ban đầu (ms)
+
+char blocks[][4][4] = {
         {{' ','I',' ',' '},
          {' ','I',' ',' '},
          {' ','I',' ',' '},
@@ -75,6 +79,7 @@ char blocks[][4][4] ={
          {'L','L','L',' '},
          {' ',' ',' ',' '}}
 };
+
 bool canMove(int dx, int dy){
     for (int i = 0; i < 4; i++ )
         for (int j = 0; j < 4; j++ )
@@ -86,22 +91,25 @@ bool canMove(int dx, int dy){
             }
     return true;
 }
+
 void block2Board(){
     for (int i = 0; i < 4; i++ )
         for (int j = 0; j < 4; j++ )
             if (blocks[b][i][j] != ' ')
                 board[y+i][x+j] = blocks[b][i][j];
 }
+
 void boardDelBlock(){
     for (int i = 0; i < 4; i++ )
         for (int j = 0; j < 4; j++ )
             if (blocks[b][i][j] != ' ')
                 board[y+i][x+j] = ' ';
 }
+
 void initBoard(){
     for (int i = 0 ; i < H ; i++)
         for (int j = 0 ; j < W ; j++)
-            if (i == 0 || i == H-1 || j ==0 || j == W-1) board[i][j] = '#';
+            if (i == 0 || i == H-1 || j == 0 || j == W-1) board[i][j] = '#';
             else board[i][j] = ' ';
 }
 void drawCell(char c){
@@ -115,22 +123,29 @@ void draw(){
     for (int i = 0 ; i < H ; i++, cout<<endl)
         for (int j = 0 ; j < W ; j++) drawCell(board[i][j]);
 }
+
 void removeLine(){
-    int i,j;
-    for (i = H-2 ; i > 0 ; i-- ){
-        for (j = 0 ; j < W ; j++)
-            if (board[i][j] == ' ') break;
-        if (j == W){
-            for (int ii = i ; ii > 0 ; ii--)
-                for (int jj = 0; jj < W; jj++)
+    for (int i = H-2; i > 0; i--){
+        bool full = true;
+        for (int j = 1; j < W-1; j++){
+            if (board[i][j] == ' '){
+                full = false;
+                break;
+            }
+        }
+        if (full){
+            for (int ii = i; ii > 1; ii--)
+                for (int jj = 1; jj < W-1; jj++)
                     board[ii][jj] = board[ii-1][jj];
-            i++;
+            for (int jj = 1; jj < W-1; jj++)
+                board[1][jj] = ' ';
+
             draw();
             _sleep(200);
-            // Logic tăng độ khó: giảm thời gian sleep
-                if (dropSpeed > 100) {
-                    dropSpeed -= 50; // Mỗi lần xóa dòng thì rơi nhanh hơn 50ms
-                }
+
+            if (dropSpeed > 100) dropSpeed -= 50;
+
+            i++; // kiểm tra lại dòng i vì vừa dịch xuống
         }
     }
 }
@@ -139,8 +154,9 @@ int main()
 {
     SetConsoleOutputCP(CP_UTF8);
     srand(time(0));
-    x = 5; y = 0; b = rand()%7;
+    x = 5; y = 0; b = rand() % 7;
     initBoard();
+
     while (1){
         boardDelBlock();
         if (kbhit()){
@@ -154,11 +170,11 @@ int main()
         else{
             block2Board();
             removeLine();
-            x = 5; y = 0; b = rand()%7;
+            x = 5; y = 0; b = rand() % 7;
         }
         block2Board();
         draw();
-        _sleep(dropSpeed);
+        _sleep(dropSpeed);   // SỬA: dùng dropSpeed thay vì số cố định 500, để tốc độ tăng dần có tác dụng
     }
     return 0;
 }
