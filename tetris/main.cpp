@@ -3,6 +3,7 @@
 #include <windows.h>
 
 using namespace std;
+int dropSpeed = 1000; // Thời gian rơi ban đầu là 1000ms (1 giây)
 #define H 20
 #define W 15
 char board[H][W] = {};
@@ -115,7 +116,23 @@ void draw(){
         for (int j = 0 ; j < W ; j++) drawCell(board[i][j]);
 }
 void removeLine(){
-
+    int i,j;
+    for (i = H-2 ; i > 0 ; i-- ){
+        for (j = 0 ; j < W ; j++)
+            if (board[i][j] == ' ') break;
+        if (j == W){
+            for (int ii = i ; ii > 0 ; ii--)
+                for (int jj = 0; jj < W; jj++)
+                    board[ii][jj] = board[ii-1][jj];
+            i++;
+            draw();
+            _sleep(200);
+            // Logic tăng độ khó: giảm thời gian sleep
+                if (dropSpeed > 100) {
+                    dropSpeed -= 50; // Mỗi lần xóa dòng thì rơi nhanh hơn 50ms
+                }
+        }
+    }
 }
 
 int main()
@@ -141,7 +158,7 @@ int main()
         }
         block2Board();
         draw();
-        _sleep(500);
+        _sleep(dropSpeed);
     }
     return 0;
 }
