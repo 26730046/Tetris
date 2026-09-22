@@ -44,3 +44,5 @@ example/*
 *.gz
 *.toc
 *.pdf
+*.synctex(busy)
+require.md

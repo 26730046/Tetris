@@ -5,7 +5,7 @@
 #include <ctime>       // cho time()
 
 using namespace std;
-
+int dropSpeed = 1000; // Thời gian rơi ban đầu là 1000ms (1 giây)
 #define H 20
 #define W 15
 char board[H][W] = {};
@@ -112,11 +112,16 @@ void initBoard(){
             if (i == 0 || i == H-1 || j == 0 || j == W-1) board[i][j] = '#';
             else board[i][j] = ' ';
 }
-
+void drawCell(char c){
+    if (c == ' ') cout << "  ";
+    else if (c == '#') cout << "██"; 
+    else cout << "[]";
+}
 void draw(){
     system("cls");
-    for (int i = 0 ; i < H ; i++, cout << endl)
-        for (int j = 0 ; j < W ; j++) cout << board[i][j];
+
+    for (int i = 0 ; i < H ; i++, cout<<endl)
+        for (int j = 0 ; j < W ; j++) drawCell(board[i][j]);
 }
 
 void removeLine(){
@@ -147,7 +152,8 @@ void removeLine(){
 
 int main()
 {
-    srand((unsigned)time(0));
+    SetConsoleOutputCP(CP_UTF8);
+    srand(time(0));
     x = 5; y = 0; b = rand() % 7;
     initBoard();
 
