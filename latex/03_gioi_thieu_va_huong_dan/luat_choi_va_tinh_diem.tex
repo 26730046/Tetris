@@ -96,12 +96,23 @@ Hệ thống tính điểm và phân cấp độ được thiết kế để khu
     \label{tab:scoring}
 \end{table}  
 
-
-
 \begin{itemize}
     \item \textbf{Điều kiện tăng cấp độ (Level Up):} Cứ sau khi xóa đủ 10 dòng, cấp độ người chơi tăng thêm 1 bậc:
     \[
     \mathrm{Level} = \frac{\mbox{Tổng số dòng đã xóa}}{10} + 1
     \]
-    \item \textbf{Tăng tốc độ rơi (Gravity):} Khi cấp độ càng cao, chu kỳ rơi tự do của khối gạch càng rút ngắn, đòi hỏi phản xạ nhanh hơn từ người chơi.
+    \item \textbf{Tăng tốc độ rơi (Gravity) và Logic tăng độ khó:} 
+Mỗi khi xoá được dòng thành công (thông qua hàm \texttt{removeLine}), tốc độ rơi của khối sẽ được tăng lên bằng cách rút ngắn thời gian trễ (\texttt{sleep}). 
+
+Công thức điều chỉnh thời gian chờ (\texttt{sleep}) theo cấp độ được xác định như sau:
+\[
+\mathrm{Sleep\_Time} = \max \left( T_{\min}, T_{\mathrm{ban\_đầu}} - (\mathrm{Level} - 1) \times \Delta t \right)
+\]
+Trong đó:
+\begin{itemize}
+    \item $T_{\mathrm{ban\_đầu}}$: Thời gian trễ mặc định ở cấp độ 1 (ví dụ: $1000\,\mathrm{ms}$).
+    \item $T_{\min}$: Ngưỡng thời gian trễ tối thiểu để trò chơi không vượt quá phản xạ của người chơi (ví dụ: $100\,\mathrm{ms}$).
+    \item $\Delta t$: Lượng thời gian giảm trừ sau mỗi lần người chơi lên cấp độ mới.
 \end{itemize}
+\end{itemize}
+
