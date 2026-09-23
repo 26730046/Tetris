@@ -5,13 +5,13 @@
 #include <ctime>       // cho time()
 
 using namespace std;
-int dropSpeed = 1000; // Thời gian rơi ban đầu là 1000ms (1 giây)
 #define H 20
 #define W 15
 char board[H][W] = {};
 
 int x, y, b;
-int dropSpeed = 500;   // THÊM: khai báo biến còn thiếu, tốc độ rơi ban đầu (ms)
+int dropSpeed = 500;
+char current[4][4];
 
 char blocks[][4][4] = {
         {{' ','I',' ',' '},
@@ -80,30 +80,63 @@ char blocks[][4][4] = {
          {' ',' ',' ',' '}}
 };
 
-bool canMove(int dx, int dy){
+void loadCurrent(){
     for (int i = 0; i < 4; i++ )
         for (int j = 0; j < 4; j++ )
-            if (blocks[b][i][j] != ' ') {
-                int xt = x + j + dx;
-                int yt = y + i + dy;
+            current[i][j] = blocks[b][i][j];
+}
+
+bool canPlace(char shape[4][4], int nx, int ny){
+    for (int i = 0; i < 4; i++ )
+        for (int j = 0; j < 4; j++ )
+            if (shape[i][j] != ' ') {
+                int xt = nx + j;
+                int yt = ny + i;
                 if (xt < 1 || xt >= W-1 || yt >= H-1 ) return false;
                 if (board[yt][xt] != ' ') return false;
             }
     return true;
 }
 
+bool canMove(int dx, int dy){
+    return canPlace(current, x + dx, y + dy);
+}
+
 void block2Board(){
     for (int i = 0; i < 4; i++ )
         for (int j = 0; j < 4; j++ )
-            if (blocks[b][i][j] != ' ')
-                board[y+i][x+j] = blocks[b][i][j];
+            if (current[i][j] != ' ')
+                board[y+i][x+j] = current[i][j];
 }
 
 void boardDelBlock(){
     for (int i = 0; i < 4; i++ )
         for (int j = 0; j < 4; j++ )
-            if (blocks[b][i][j] != ' ')
+            if (current[i][j] != ' ')
                 board[y+i][x+j] = ' ';
+}
+
+void rotateMatrix(char src[4][4], char dst[4][4]){
+    for (int i = 0; i < 4; i++ )
+        for (int j = 0; j < 4; j++ )
+            dst[i][j] = src[3-j][i];
+}
+
+void rotate(){
+    char rotated[4][4];
+    rotateMatrix(current, rotated);
+
+    const int kicks[] = {0, -1, 1, -2, 2};
+    for (int k = 0; k < 5; k++){
+        int nx = x + kicks[k];
+        if (canPlace(rotated, nx, y)){
+            x = nx;
+            for (int i = 0; i < 4; i++ )
+                for (int j = 0; j < 4; j++ )
+                    current[i][j] = rotated[i][j];
+            return;
+        }
+    }
 }
 
 void initBoard(){
@@ -155,6 +188,7 @@ int main()
     SetConsoleOutputCP(CP_UTF8);
     srand(time(0));
     x = 5; y = 0; b = rand() % 7;
+    loadCurrent();
     initBoard();
 
     while (1){
@@ -164,6 +198,7 @@ int main()
             if (c == 'a' && canMove(-1,0)) x--;
             if (c == 'd' && canMove( 1,0)) x++;
             if (c == 'x' && canMove( 0,1)) y++;
+            if (c == 'w') rotate();
             if (c == 'q') break;
         }
         if (canMove(0,1)) y++;
@@ -171,6 +206,7 @@ int main()
             block2Board();
             removeLine();
             x = 5; y = 0; b = rand() % 7;
+            loadCurrent();
         }
         block2Board();
         draw();
