@@ -12,38 +12,23 @@ char board[H][W] = {};
 int x, y, b;
 int dropSpeed = 500;
 int score = 0;
-char current[4][4];
-
-char blocks[][4][4] = {
-        {{' ',' ',' ',' '},
-         {'I','I','I','I'},
-         {' ',' ',' ',' '},
-         {' ',' ',' ',' '}},
-        {{' ',' ',' ',' '},
-         {' ','O','O',' '},
-         {' ','O','O',' '},
-         {' ',' ',' ',' '}},
-        {{' ',' ',' ',' '},
-         {' ','T',' ',' '},
-         {'T','T','T',' '},
-         {' ',' ',' ',' '}},
-        {{' ',' ',' ',' '},
-         {' ','S','S',' '},
-         {'S','S',' ',' '},
-         {' ',' ',' ',' '}},
-        {{' ',' ',' ',' '},
-         {'Z','Z',' ',' '},
-         {' ','Z','Z',' '},
-         {' ',' ',' ',' '}},
-        {{' ',' ',' ',' '},
-         {'J',' ',' ',' '},
-         {'J','J','J',' '},
-         {' ',' ',' ',' '}},
-        {{' ',' ',' ',' '},
-         {' ',' ','L',' '},
-         {'L','L','L',' '},
-         {' ',' ',' ',' '}}
+// --- TASK 1: Base Class & Quản lý bộ nhớ ---
+class Block {
+public:
+    char shape[4][4];
+    
+    virtual ~Block() {}
+    
+    // Hàm ảo để Người 3 cài đặt đa hình
+    virtual void rotate() = 0;
+    
+    // Hàm ảo hỗ trợ khôi phục trạng thái cho Người 5
+    virtual void undoRotate() = 0;
 };
+
+// Con trỏ đa hình thay thế cho mảng current và blocks
+Block* currentBlock = nullptr;
+// ------------------------------------------
 
 void loadCurrent(){
     for (int i = 0; i < 4; i++ )
@@ -192,6 +177,13 @@ int main()
                 block2Board();
                 removeLine();
                 x = 5; y = 0; b = rand() % 7;
+                
+                // Giải phóng bộ nhớ khối cũ trước khi cấp phát khối mới (Người 1)
+                if (currentBlock != nullptr) {
+                    delete currentBlock;
+                    currentBlock = nullptr;
+                }
+                
                 loadCurrent();
                 if (!canPlace(current, x, y)) {
                     system("cls");
@@ -205,6 +197,10 @@ int main()
         block2Board();
         draw();
         Sleep(30);
+    }
+    
+    if (currentBlock != nullptr) {
+        delete currentBlock;
     }
     return 0;
 }
