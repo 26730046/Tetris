@@ -11,6 +11,7 @@ char board[H][W] = {};
 
 int x, y, b;
 int dropSpeed = 500;
+int score = 0;
 char current[4][4];
 
 char blocks[][4][4] = {
@@ -120,6 +121,8 @@ void draw(){
     cursorPosition.Y = 0;
     SetConsoleCursorPosition(GetStdHandle(STD_OUTPUT_HANDLE), cursorPosition);
 
+    cout << "  Điểm số: " << score << "        \n";
+
     for (int i = 0 ; i < H ; i++, cout<<endl)
         for (int j = 0 ; j < W ; j++) drawCell(board[i][j]);
 }
@@ -134,6 +137,7 @@ void removeLine(){
             }
         }
         if (full){
+            score += 100;
             for (int ii = i; ii > 1; ii--)
                 for (int jj = 1; jj < W-1; jj++)
                     board[ii][jj] = board[ii-1][jj];
