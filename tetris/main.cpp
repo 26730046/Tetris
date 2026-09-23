@@ -189,6 +189,13 @@ void removeLine(){
 int main()
 {
     SetConsoleOutputCP(CP_UTF8);
+    
+    // Ẩn con trỏ chuột nhấp nháy trên Console
+    CONSOLE_CURSOR_INFO cursorInfo;
+    GetConsoleCursorInfo(GetStdHandle(STD_OUTPUT_HANDLE), &cursorInfo);
+    cursorInfo.bVisible = FALSE;
+    SetConsoleCursorInfo(GetStdHandle(STD_OUTPUT_HANDLE), &cursorInfo);
+
     srand(time(0));
     x = 5; y = 0; b = rand() % 7;
     loadCurrent();
