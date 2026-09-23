@@ -193,6 +193,11 @@ int main()
                 removeLine();
                 x = 5; y = 0; b = rand() % 7;
                 loadCurrent();
+                if (!canPlace(current, x, y)) {
+                    system("cls");
+                    cout << "\n\n\tGAME OVER!\n\tDiem so: " << score << "\n\n";
+                    break;
+                }
             }
             timer = 0;
         }
