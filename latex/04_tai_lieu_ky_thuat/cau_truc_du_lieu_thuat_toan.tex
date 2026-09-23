@@ -21,4 +21,72 @@
 
 \subsection{Thuật toán xoay khối gạch (Rotation Algorithm)}
 % [Gợi ý nội dung: Cơ chế chuyển đổi trạng thái giữa các góc xoay 0, 90, 180, 270 độ, kiểm tra tính hợp lệ sau khi xoay (Wall Kick nếu có)]
-\textit{[Nội dung bổ sung sau: Cơ chế xoay khối gạch và xử lý va chạm khi xoay]}
+
+Ở phiên bản gốc, các hàm \texttt{canMove}, \texttt{block2Board}, \texttt{boardDelBlock} đọc và vẽ trực tiếp \texttt{blocks[b][i][j]}, tức là thao tác thẳng lên mảng mẫu dùng chung cho mọi lần xuất hiện của khối \texttt{b}. Nếu xoay bằng cách sửa trực tiếp vào \texttt{blocks[b]}, hình dạng gốc của loại khối đó sẽ bị thay đổi vĩnh viễn cho những lần khối cùng loại xuất hiện sau này. Để tránh việc này, nhóm tách khối đang rơi ra một mảng riêng \texttt{current[4][4]}: mảng này được nạp từ \texttt{blocks[b]} mỗi khi có khối mới xuất hiện (hàm \texttt{loadCurrent()}), còn ba hàm kể trên đều được sửa lại để thao tác trên \texttt{current} thay vì \texttt{blocks[b]}. Nhờ vậy, xoay khối chỉ làm thay đổi bản sao đang chơi, mảng \texttt{blocks} gốc luôn giữ nguyên.
+
+\subsubsection{Công thức xoay ma trận 4x4}
+
+Thay vì lưu sẵn 4 trạng thái 0°/90°/180°/270° cho từng loại khối (cách làm của hệ thống Super Rotation System - SRS), nhóm tính trạng thái xoay bằng công thức hình học trên ma trận vuông $4 \times 4$: xoay 90° theo chiều kim đồng hồ quanh tâm ma trận tương đương phép chuyển vị (transpose) rồi lật cột, được rút gọn thành
+
+\[
+dst[i][j] = src[3-j][i], \quad \forall i, j \in \{0, 1, 2, 3\}
+\]
+
+\begin{lstlisting}[language=C++, caption={Hàm xoay ma trận 4x4 90 độ theo chiều kim đồng hồ}]
+void rotateMatrix(char src[4][4], char dst[4][4]){
+    for (int i = 0; i < 4; i++)
+        for (int j = 0; j < 4; j++)
+            dst[i][j] = src[3-j][i];
+}
+\end{lstlisting}
+
+Vì công thức chỉ phụ thuộc vào toạ độ trong ma trận $4\times4$, nó áp dụng được cho mọi khối đã khai báo (I, O, T, S, Z, J, L) mà không cần bảng tra riêng cho từng loại. Ví dụ, khối \texttt{I} dạng đứng (cột 1, các hàng 0--3) sau một lần xoay trở thành khối \texttt{I} nằm ngang (hàng 1, các cột 0--3), đúng với hình học của khối thật; khối \texttt{O} chiếm đúng vùng $2\times2$ ở tâm ma trận nên bất biến qua phép xoay, giống hành vi chuẩn của Tetris.
+
+\subsubsection{Kiểm tra hợp lệ và Wall Kick}
+
+Hàm \texttt{canMove} gốc chỉ kiểm tra được khối ở vị trí dịch chuyển $(dx, dy)$ so với khối hiện tại, không thể dùng để kiểm tra một ma trận khác (ma trận sau khi xoay). Nhóm tổng quát hoá phần kiểm tra biên và va chạm thành hàm \texttt{canPlace(shape, nx, ny)}, nhận vào một ma trận $4\times4$ bất kỳ và toạ độ gốc cần kiểm tra; \texttt{canMove} sau đó chỉ còn là một trường hợp gọi lại \texttt{canPlace} với \texttt{shape = current}:
+
+\begin{lstlisting}[language=C++, caption={Kiểm tra một hình dạng bất kỳ có đặt được tại toạ độ (nx, ny)}]
+bool canPlace(char shape[4][4], int nx, int ny){
+    for (int i = 0; i < 4; i++)
+        for (int j = 0; j < 4; j++)
+            if (shape[i][j] != ' ') {
+                int xt = nx + j;
+                int yt = ny + i;
+                if (xt < 1 || xt >= W-1 || yt >= H-1) return false;
+                if (board[yt][xt] != ' ') return false;
+            }
+    return true;
+}
+\end{lstlisting}
+
+Khi người chơi nhấn phím xoay, hàm \texttt{rotate()} tính trước ma trận đã xoay bằng \texttt{rotateMatrix}, sau đó dùng \texttt{canPlace} để thử đặt ma trận đó tại chính toạ độ \texttt{x} hiện tại. Nếu vị trí gốc bị chặn (ví dụ khối nằm sát tường trái/phải khiến hình sau khi xoay lấn ra ngoài, hoặc chạm khối đã xếp), hàm thử dịch ngang khối sang trái/phải 1 và 2 ô trước khi huỷ thao tác xoay -- đây là một dạng \textit{wall kick} đơn giản hoá, chỉ xét theo trục ngang, khác với bảng kick offset đầy đủ theo chuẩn SRS (vốn xét cả trục dọc và khác nhau giữa khối \texttt{I} với các khối còn lại):
+
+\begin{lstlisting}[language=C++, caption={Xoay khối hiện tại kèm wall kick theo trục ngang}]
+void rotate(){
+    char rotated[4][4];
+    rotateMatrix(current, rotated);
+
+    const int kicks[] = {0, -1, 1, -2, 2};
+    for (int k = 0; k < 5; k++){
+        int nx = x + kicks[k];
+        if (canPlace(rotated, nx, y)){
+            x = nx;
+            for (int i = 0; i < 4; i++)
+                for (int j = 0; j < 4; j++)
+                    current[i][j] = rotated[i][j];
+            return;
+        }
+    }
+}
+\end{lstlisting}
+
+Nếu không có toạ độ nào trong 5 lựa chọn trên hợp lệ, \texttt{rotate()} không thay đổi gì cả: khối giữ nguyên hình dạng và vị trí trước đó, tương tự cách \texttt{canMove} chặn di chuyển ra ngoài biên. Phím \texttt{w} được thêm vào nhóm phím điều khiển (\texttt{a}/\texttt{d}/\texttt{x}) trong vòng lặp chính để gọi \texttt{rotate()}.
+
+\subsubsection{Hạn chế}
+
+\begin{itemize}
+    \item Vì \texttt{b = rand() \% 7} hiện chỉ chọn trong 7 phần tử đầu của mảng \texttt{blocks} (chỉ gồm khối \texttt{I} và \texttt{O}, xem Bảng~\ref{tab:ui_danh_gia}), các khối T, S, Z, J, L tuy có thuật toán xoay hoạt động đúng về mặt hình học nhưng chưa từng xuất hiện trong một ván chơi thực tế.
+    \item Wall kick chỉ dịch theo trục ngang ($\pm 1$, $\pm 2$ ô), chưa xử lý trường hợp cần dịch theo trục dọc (ví dụ xoay khi khối đã gần chạm đáy).
+    \item Trạng thái xoay được tính lại bằng công thức hình học mỗi lần bấm phím thay vì tra bảng offset chuẩn SRS, nên hành vi xoay ở một số vị trí sát biên có thể khác với Tetris chính thức.
+\end{itemize}
