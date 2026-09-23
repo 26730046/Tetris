@@ -151,7 +151,10 @@ void drawCell(char c){
     else cout << "[]";
 }
 void draw(){
-    system("cls");
+    COORD cursorPosition;
+    cursorPosition.X = 0;
+    cursorPosition.Y = 0;
+    SetConsoleCursorPosition(GetStdHandle(STD_OUTPUT_HANDLE), cursorPosition);
 
     for (int i = 0 ; i < H ; i++, cout<<endl)
         for (int j = 0 ; j < W ; j++) drawCell(board[i][j]);
@@ -174,7 +177,7 @@ void removeLine(){
                 board[1][jj] = ' ';
 
             draw();
-            _sleep(200);
+            Sleep(200);
 
             if (dropSpeed > 100) dropSpeed -= 50;
 
@@ -191,26 +194,37 @@ int main()
     loadCurrent();
     initBoard();
 
+    int timer = 0;
+    system("cls"); // Clear screen once at the beginning
     while (1){
         boardDelBlock();
-        if (kbhit()){
+        
+        // Handle input smoothly
+        while (kbhit()){
             char c = getch();
             if (c == 'a' && canMove(-1,0)) x--;
             if (c == 'd' && canMove( 1,0)) x++;
             if (c == 'x' && canMove( 0,1)) y++;
             if (c == 'w') rotate();
-            if (c == 'q') break;
+            if (c == 'q') return 0;
         }
-        if (canMove(0,1)) y++;
-        else{
-            block2Board();
-            removeLine();
-            x = 5; y = 0; b = rand() % 7;
-            loadCurrent();
+        
+        timer += 30; // 30ms per frame
+        if (timer >= dropSpeed) {
+            if (canMove(0,1)) {
+                y++;
+            } else {
+                block2Board();
+                removeLine();
+                x = 5; y = 0; b = rand() % 7;
+                loadCurrent();
+            }
+            timer = 0;
         }
+
         block2Board();
         draw();
-        _sleep(dropSpeed);   // SỬA: dùng dropSpeed thay vì số cố định 500, để tốc độ tăng dần có tác dụng
+        Sleep(30);
     }
     return 0;
 }
