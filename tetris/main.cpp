@@ -11,45 +11,10 @@ char board[H][W] = {};
 
 int x, y, b;
 int dropSpeed = 500;
+int score = 0;
 char current[4][4];
 
 char blocks[][4][4] = {
-        {{' ','I',' ',' '},
-         {' ','I',' ',' '},
-         {' ','I',' ',' '},
-         {' ','I',' ',' '}},
-        {{' ','I',' ',' '},
-         {' ','I',' ',' '},
-         {' ','I',' ',' '},
-         {' ','I',' ',' '}},
-        {{' ',' ',' ',' '},
-         {' ','O','O',' '},
-         {' ','O','O',' '},
-         {' ',' ',' ',' '}},
-        {{' ',' ',' ',' '},
-         {' ','O','O',' '},
-         {' ','O','O',' '},
-         {' ',' ',' ',' '}},
-        {{' ',' ',' ',' '},
-         {' ','O','O',' '},
-         {' ','O','O',' '},
-         {' ',' ',' ',' '}},
-        {{' ',' ',' ',' '},
-         {' ','O','O',' '},
-         {' ','O','O',' '},
-         {' ',' ',' ',' '}},
-        {{' ',' ',' ',' '},
-         {' ','O','O',' '},
-         {' ','O','O',' '},
-         {' ',' ',' ',' '}},
-        {{' ',' ',' ',' '},
-         {' ','O','O',' '},
-         {' ','O','O',' '},
-         {' ',' ',' ',' '}},
-        {{' ',' ',' ',' '},
-         {' ','O','O',' '},
-         {' ','O','O',' '},
-         {' ',' ',' ',' '}},
         {{' ',' ',' ',' '},
          {'I','I','I','I'},
          {' ',' ',' ',' '},
@@ -151,7 +116,12 @@ void drawCell(char c){
     else cout << "[]";
 }
 void draw(){
-    system("cls");
+    COORD cursorPosition;
+    cursorPosition.X = 0;
+    cursorPosition.Y = 0;
+    SetConsoleCursorPosition(GetStdHandle(STD_OUTPUT_HANDLE), cursorPosition);
+
+    cout << "  Điểm số: " << score << "        \n";
 
     for (int i = 0 ; i < H ; i++, cout<<endl)
         for (int j = 0 ; j < W ; j++) drawCell(board[i][j]);
@@ -167,6 +137,7 @@ void removeLine(){
             }
         }
         if (full){
+            score += 100;
             for (int ii = i; ii > 1; ii--)
                 for (int jj = 1; jj < W-1; jj++)
                     board[ii][jj] = board[ii-1][jj];
@@ -174,7 +145,7 @@ void removeLine(){
                 board[1][jj] = ' ';
 
             draw();
-            _sleep(200);
+            Sleep(200);
 
             if (dropSpeed > 100) dropSpeed -= 50;
 
@@ -186,31 +157,54 @@ void removeLine(){
 int main()
 {
     SetConsoleOutputCP(CP_UTF8);
+    
+    // Ẩn con trỏ chuột nhấp nháy trên Console
+    CONSOLE_CURSOR_INFO cursorInfo;
+    GetConsoleCursorInfo(GetStdHandle(STD_OUTPUT_HANDLE), &cursorInfo);
+    cursorInfo.bVisible = FALSE;
+    SetConsoleCursorInfo(GetStdHandle(STD_OUTPUT_HANDLE), &cursorInfo);
+
     srand(time(0));
     x = 5; y = 0; b = rand() % 7;
     loadCurrent();
     initBoard();
 
+    int timer = 0;
+    system("cls"); // Clear screen once at the beginning
     while (1){
         boardDelBlock();
-        if (kbhit()){
+        
+        // Handle input smoothly
+        while (kbhit()){
             char c = getch();
             if (c == 'a' && canMove(-1,0)) x--;
             if (c == 'd' && canMove( 1,0)) x++;
             if (c == 'x' && canMove( 0,1)) y++;
             if (c == 'w') rotate();
-            if (c == 'q') break;
+            if (c == 'q') return 0;
         }
-        if (canMove(0,1)) y++;
-        else{
-            block2Board();
-            removeLine();
-            x = 5; y = 0; b = rand() % 7;
-            loadCurrent();
+        
+        timer += 30; // 30ms per frame
+        if (timer >= dropSpeed) {
+            if (canMove(0,1)) {
+                y++;
+            } else {
+                block2Board();
+                removeLine();
+                x = 5; y = 0; b = rand() % 7;
+                loadCurrent();
+                if (!canPlace(current, x, y)) {
+                    system("cls");
+                    cout << "\n\n\tGAME OVER!\n\tDiem so: " << score << "\n\n";
+                    break;
+                }
+            }
+            timer = 0;
         }
+
         block2Board();
         draw();
-        _sleep(dropSpeed);   // SỬA: dùng dropSpeed thay vì số cố định 500, để tốc độ tăng dần có tác dụng
+        Sleep(30);
     }
     return 0;
 }
