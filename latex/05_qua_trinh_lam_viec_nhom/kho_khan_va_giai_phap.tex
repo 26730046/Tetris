@@ -1,9 +1,37 @@
 \section{Khó khăn gặp phải và Giải pháp khắc phục}
+\label{sec:kho_khan_va_giai_phap}
 
 \subsection{Khó khăn về kỹ thuật}
-% [Gợi ý: Trình bày các khó khăn thực tế về thuật toán, cài đặt mã nguồn, đồ họa hoặc môi trường biên dịch]
-\textit{[Nội dung bổ sung sau: Khó khăn kỹ thuật gặp phải và giải pháp xử lý]}
+\label{sec:kho_khan_ky_thuat}
+
+\begin{enumerate}
+    \item \textbf{Khối gạch hiển thị méo trên console.} Do ô ký tự của console có dạng chữ nhật đứng, bàn cờ vẽ bằng ký tự \texttt{\#} trông cao và hẹp. Bản vá đầu tiên thay bằng ký tự khối đặc Unicode U+2588 (\texttt{cbae6d6}, gộp qua PR \#10), nhưng ngay trong ngày một commit hoàn tác được tạo trên nhánh \texttt{revert-10-...} (\texttt{34bf0ab}), cho thấy bản vá từng bị đặt vấn đề vì phụ thuộc bảng mã và phông chữ của từng máy. Nhánh hoàn tác cuối cùng không được gộp: nhóm giữ hướng vẽ bằng ký tự khối và bổ sung mã màu ANSI cho từng loại khối ở giai đoạn nâng cấp (\texttt{ed654bd}).
+
+    \item \textbf{Màn hình nhấp nháy và phím phản hồi chậm.} Phiên bản đầu xóa và vẽ lại toàn bộ màn hình mỗi chu kỳ, lại chỉ đọc một phím cho mỗi vòng lặp 500\,ms. Nhóm giảm độ trễ vòng lặp, hạn chế vẽ lại (\texttt{1122d6f}) và ẩn con trỏ console (\texttt{75d97c2}).
+
+    \item \textbf{Khối gạch xuất hiện không đều.} Cách chọn khối ngẫu nhiên ban đầu khiến khối \texttt{O} chiếm phần lớn lượt chơi, các khối T, S, Z, J, L gần như không xuất hiện. Nhóm sửa tạm phần xác suất (\texttt{3a35ba3}), sau đó thay hẳn bằng thuật toán \textit{7-Bag Randomizer} (\texttt{3a7f931}).
+
+    \item \textbf{Xoay khối bị vướng tường.} Khối nằm sát mép bàn cờ không xoay được vì mọi vị trí sau phép xoay đều bị coi là va chạm. Nhóm áp dụng \textit{wall kicks}: thử dịch khối sang các tọa độ lân cận trước khi kết luận phép xoay không hợp lệ và khôi phục trạng thái cũ nếu không tìm được chỗ đặt (\texttt{e2662ea}, \texttt{1b7e2b3}).
+
+    \item \textbf{Rủi ro rò rỉ bộ nhớ khi chuyển sang hướng đối tượng.} Việc thay các mảng toàn cục bằng con trỏ \texttt{Block*} đòi hỏi giải phóng đúng lúc đối tượng khối cũ. Nhóm giao riêng phần quản lý vòng đời đối tượng cho nhóm trưởng ngay trong bảng phân công tuần 3 (\texttt{aa84e89}), thay vì để mỗi thành viên tự quản lý bộ nhớ trong phần của mình.
+
+    \item \textbf{Sự cố biên dịch bộ tài liệu \LaTeX.} Khi ghép các chương do nhiều người viết, nhóm gặp ba vấn đề: một file chương vẫn giữ dạng tài liệu độc lập với lệnh \texttt{\textbackslash end\{document\}} nên PDF bị cắt ngang ở chương 3; một chương khác dùng \texttt{\textbackslash text} mà thiếu gói \texttt{amsmath}; công cụ \texttt{latexmk} trên máy cá nhân cần cài thêm Perl. Giải pháp là quy ước mọi file chương chỉ chứa nội dung từ cấp \texttt{\textbackslash section} trở xuống, khai báo gói tập trung ở master file, và dùng quy trình biên dịch hai lượt bằng \texttt{pdflatex}.
+\end{enumerate}
 
 \subsection{Khó khăn trong phối hợp làm việc nhóm}
-% [Gợi ý: Trình bày khó khăn về sắp xếp thời gian, giao tiếp, phân chia công việc hoặc tiến độ]
-\textit{[Nội dung bổ sung sau: Khó khăn khi làm việc nhóm và cách khắc phục]}
+
+Năm thành viên có lịch học khác nhau nên nhóm hiếm khi họp trực tiếp đầy đủ; phần lớn việc phối hợp diễn ra bất đồng bộ qua Slack và Trello, chỉ họp khi cần chốt những quyết định lớn. Cách làm này kéo theo một số khó khăn sau:
+
+\begin{enumerate}
+    \item \textbf{Đụng độ khi gộp mã do làm song song trên cùng một file.} Ở giai đoạn đầu, cả mã nguồn lẫn báo cáo đều tập trung trong vài file lớn, trong khi bốn nhánh cùng chạy song song. Nhóm thống nhất quy trình: trước khi tạo Pull Request, thành viên phải gộp nhánh \texttt{master} mới nhất vào nhánh của mình và tự xử lý xung đột; lịch sử Git còn lưu bốn lượt gộp kiểu này, ví dụ \texttt{318e857} và \texttt{070e691}.
+
+    \item \textbf{Cấu hình Git chưa thống nhất.} Hai commit đầu của một thành viên bị ghi nhận với tác giả \textit{unknown}, một thành viên khác xuất hiện dưới hai danh xưng khác nhau, gây khó khăn khi thống kê đóng góp. Nhóm khắc phục bằng cách yêu cầu mọi máy khai báo \texttt{user.name} theo mã số sinh viên và \texttt{user.email} theo email trường trước khi commit tiếp.
+
+    \item \textbf{Chất lượng thông điệp commit không đồng đều.} Bên cạnh các commit ghi rõ nội dung, vẫn còn hai commit chỉ đặt tên là dấu chấm (\texttt{5bfae94}, \texttt{ddcbe20}), khiến việc tra cứu lịch sử mất thời gian. Nhóm quy ước đặt tiền tố \texttt{add}, \texttt{update}, \texttt{fix} hoặc \texttt{refactor} kèm mô tả ngắn, và phần lớn commit về sau đã tuân thủ.
+
+    \item \textbf{Tài liệu mô tả lệch so với mã nguồn thực tế.} Bảng phím ở mục 3.3.1 ban đầu được viết theo hình dung về một bản Tetris hoàn chỉnh, liệt kê cả phím mũi tên, phím tạm dừng và phím cách, trong khi mã nguồn khi đó chỉ nhận bốn phím chữ thường. Sự lệch này bị phát hiện khi thành viên viết mục 3.3.2 chụp màn hình và đối chiếu trực tiếp với mã nguồn. Nhóm rút ra nguyên tắc: mọi mô tả trong báo cáo phải kiểm chứng lại với phiên bản mã nguồn hiện hành trước khi nộp.
+
+    \item \textbf{Khối lượng công việc phân bố chưa đều.} Thống kê commit cho thấy nhóm trưởng thực hiện 29 trên tổng số 41 commit nội dung, do phần lập trình nâng cấp ở giai đoạn cuối được dồn cho một người để bốn thành viên còn lại tập trung viết báo cáo. Nhóm đã cân bằng lại một phần bằng cách giao trọn mỗi chương báo cáo cho từng thành viên, nhưng vẫn xem đây là kinh nghiệm cần rút: nên tách nhỏ và giao sớm các đầu việc lập trình thay vì gom vào đợt cuối.
+\end{enumerate}
+
+Ba bài học nhóm rút ra là: quy trình duyệt qua Pull Request tuy mất thời gian nhưng giúp phát hiện sớm các bản vá có rủi ro; ranh giới công việc nên trùng với ranh giới file để hạn chế đụng độ khi gộp mã; và các quy ước kỹ thuật (cấu hình Git, tên nhánh, thông điệp commit) cần thống nhất ngay từ buổi đầu, vì sửa giữa chừng thì lịch sử dự án đã lưu dữ liệu không nhất quán.

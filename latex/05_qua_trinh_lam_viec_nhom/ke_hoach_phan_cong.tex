@@ -1,28 +1,67 @@
 \section{Kế hoạch triển khai và Phân công nhiệm vụ}
 
 \subsection{Kế hoạch và Lộ trình thực hiện (Project Timeline)}
-% [Gợi ý nội dung: Chia theo các giai đoạn: Tuần 1-2 (Lên ý tưởng & Viết hợp đồng nhóm), Tuần 3-4 (Thiết kế kiến trúc & code khung trò chơi), Tuần 5-6 (Hoàn thiện thuật toán & tính năng), Tuần 7 (Kiểm thử, sửa lỗi & viết báo cáo LaTeX), Tuần 8 (Tổng kết & chuẩn bị thuyết trình)]
-\textit{[Nội dung bổ sung sau: Biểu đồ Gantt hoặc bảng kế hoạch chi tiết từng tuần]}
+
+Nhóm triển khai đồ án theo bốn giai đoạn, mỗi giai đoạn gắn với một mục tiêu riêng và được công bố bằng một bảng phân công trong file \texttt{README.md} của kho mã nguồn. Cách làm này vừa giúp mọi thành viên tra cứu lại nhiệm vụ bất cứ lúc nào, vừa để lại minh chứng về thời điểm phân công (commit \texttt{0abac71} và \texttt{10355e2}).
+
+\begin{table}[H]
+    \centering
+    \caption{Bốn giai đoạn triển khai đồ án và minh chứng trên GitHub}
+    \label{tab:lo_trinh}
+    \renewcommand{\arraystretch}{1.3}
+    \begin{tabularx}{\textwidth}{|c|p{2.4cm}|p{5.8cm}|X|}
+        \hline
+        \textbf{GĐ} & \textbf{Thời gian} & \textbf{Mục tiêu} & \textbf{Minh chứng trên GitHub} \\
+        \hline
+        1 & 10/09 -- 17/09 & Khởi động dự án, thống nhất hợp đồng nhóm, viết các chương giới thiệu và luật chơi của báo cáo. & Commit \texttt{761dc68} (\textit{initialize}) ngày 10/09; các PR \#1--\#8 gộp trong hai ngày 16--17/09; hợp đồng nhóm ký ngày 17/09. \\
+        \hline
+        2 & 21/09 -- 22/09 & Ứng dụng Git vào làm việc song song: mỗi thành viên phát triển một tính năng cốt lõi trên nhánh riêng. & Phân công tuần 2 (\texttt{0abac71}); các PR \#9, \#10, \#12, \#13, \#14 từ 4 nhánh mang tên thành viên. \\
+        \hline
+        3 & 23/09 -- 24/09 & Tái cấu trúc mã nguồn theo hướng đối tượng: lớp cơ sở \texttt{Block}, 7 lớp con, logic xoay và \textit{wall kicks}. & Các PR \#15--\#21, tương ứng các nhánh \texttt{...\_base\_class\_memory}, \texttt{...\_trien\_khai\_subclass}, \texttt{...\_logic\_xoay}, \texttt{...\_board\_interaction}, \texttt{...\_xu\_ly\_wall\_kicks}. \\
+        \hline
+        4 & 24/09 & Nâng cấp trải nghiệm trò chơi và hoàn thiện bộ tài liệu \LaTeX\ của cả nhóm. & Phân công tuần 4 (\texttt{10355e2}); các PR \#22--\#24 với 8 commit tính năng (Hard Drop, Ghost Piece, Next Block, 7-Bag Randomizer, điểm số, tạm dừng, menu Game Over, màu sắc). \\
+        \hline
+    \end{tabularx}
+\end{table}
+
+Lộ trình không trải đều mà dồn vào các đợt làm việc tập trung: 8 commit ngày 16/09, 3 commit ngày 21/09, 8 commit ngày 23/09 và 16 commit ngày 24/09 (không tính commit gộp nhánh), do các thành viên chỉ trùng lịch rảnh vào một số buổi trong tuần.
 
 \subsection{Bảng phân công nhiệm vụ chi tiết}
+
+Bảng~\ref{tab:phan_cong_nhiem_vu} tổng hợp nhiệm vụ của từng thành viên qua cả bốn giai đoạn, đối chiếu với các bảng phân công đã công bố và với lịch sử commit thực tế.
+
 \begin{table}[H]
     \centering
     \caption{Phân công nhiệm vụ cho các thành viên trong nhóm}
     \label{tab:phan_cong_nhiem_vu}
-    \renewcommand{\arraystretch}{1.6}
-    \begin{tabularx}{\textwidth}{|c|p{4cm}|p{2.5cm}|X|}
+    \renewcommand{\arraystretch}{1.35}
+    \begin{tabularx}{\textwidth}{|c|p{3.4cm}|p{1.9cm}|X|}
         \hline
         \textbf{STT} & \textbf{Họ và tên} & \textbf{MSSV} & \textbf{Nhiệm vụ chính được giao} \\
         \hline
-        1 & Phạm Ngọc Hoàng Long & 26730046 & \textit{[Nhóm trưởng - Nhiệm vụ phân công]} \\
+        1 & Phạm Ngọc Hoàng Long & 26730046 & Nhóm trưởng: khởi tạo kho mã nguồn, quản trị nhánh và duyệt Pull Request; xây dựng lớp cơ sở \texttt{Block} và cơ chế quản lý bộ nhớ; lập trình toàn bộ nhóm tính năng nâng cấp ở giai đoạn 4; biên tập master file \LaTeX\ và xuất bản PDF. \\
         \hline
-        2 & Huỳnh Thị Kim Anh & 26730002 & \textit{[Nhiệm vụ phân công]} \\
+        2 & Huỳnh Thị Kim Anh & 26730002 & Viết chương tổng quan về trò chơi (mục 3.1); lập trình hàm \texttt{removeLine()} xử lý xóa dòng; xây dựng cơ chế thử xoay kèm \textit{wall kicks}; phụ trách chương đánh giá việc thực hiện hợp đồng nhóm và kiểm thử các tính năng mới. \\
         \hline
-        3 & Hoàng Gia Huy & 26730026 & \textit{[Nhiệm vụ phân công]} \\
+        3 & Hoàng Gia Huy & 26730026 & Viết mục giới thiệu Tetromino (3.2.1); cải tiến giao diện hiển thị khối gạch; triển khai 7 lớp con kế thừa \texttt{Block} và hàm khởi tạo theo mô hình Factory; phụ trách chương tài liệu kỹ thuật. \\
         \hline
-        4 & Lê Thành Nam & 26730050 & \textit{[Nhiệm vụ phân công]} \\
+        4 & Lê Thành Nam & 26730050 & Nghiên cứu và lập trình thuật toán xoay khối (kèm mô tả ở mục 4.2.5); chuyển các hàm \texttt{canPlace()}, \texttt{block2Board()}, \texttt{boardDelBlock()} sang làm việc với đối tượng \texttt{Block}; viết mục giao diện và trải nghiệm người dùng (3.3.2) và chương mô tả quá trình làm việc nhóm. \\
         \hline
-        5 & Phạm Mạnh Thiên Phúc & 26730057 & \textit{[Nhiệm vụ phân công]} \\
+        5 & Phạm Mạnh Thiên Phúc & 26730057 & Viết các mục luật chơi và hệ thống tính điểm (3.2.2, 3.2.3); lập trình logic tăng độ khó theo số dòng đã xóa; viết hàm \texttt{rotate()} mặc định và các phiên bản ghi đè cho từng loại khối; phụ trách chương kỹ năng đã áp dụng. \\
         \hline
     \end{tabularx}
 \end{table}
+
+\subsection{Quá trình điều chỉnh và phân chia lại công việc}
+
+Bảng phân công không cố định từ đầu đến cuối mà được điều chỉnh sau mỗi giai đoạn, dựa trên kết quả thực tế của giai đoạn trước. Nhóm ghi nhận bốn lần thay đổi đáng kể:
+
+\begin{enumerate}
+    \item \textbf{Hoán đổi nhiệm vụ xoay khối giữa giai đoạn 2 và giai đoạn 3.} Ở tuần 2, việc nghiên cứu thuật toán xoay được giao cho Lê Thành Nam. Khi chuyển sang mô hình hướng đối tượng, nhiệm vụ này bị tách làm ba và chia lại cho ba người: Phạm Mạnh Thiên Phúc viết hàm \texttt{rotate()} mặc định cùng các bản ghi đè, Huỳnh Thị Kim Anh xử lý luồng phím và \textit{wall kicks}, còn Lê Thành Nam chuyển sang nhóm hàm tương tác với bàn cờ. Lý do là sau khi có lớp \texttt{Block}, phép xoay ma trận và phép kiểm tra va chạm trở thành hai công việc độc lập.
+
+    \item \textbf{Chuyển hướng công việc của Hoàng Gia Huy.} Nhiệm vụ tuần 2 của thành viên này là chỉnh giao diện hiển thị cho khối gạch vuông vức hơn. Sau khi bản vá dùng ký tự Unicode gặp vấn đề (trình bày ở Mục~\ref{sec:kho_khan_ky_thuat}), phần giao diện được gác lại và thành viên chuyển sang xây dựng 7 lớp con của \texttt{Block} ở tuần 3.
+
+    \item \textbf{Tập trung phần lập trình nâng cấp vào nhóm trưởng ở giai đoạn 4.} Do bốn thành viên còn lại đồng thời phải viết bốn chương báo cáo \LaTeX\ có quy định số trang, nhóm thống nhất để nhóm trưởng trực tiếp lập trình toàn bộ nhóm tính năng nâng cấp. Lịch sử Git xác nhận cả 8 commit tính năng ngày 24/09 đều do tài khoản \texttt{26730046} tạo. Cách chia này giúp báo cáo kịp hạn nhưng làm khối lượng dồn vào một người, đây là hạn chế nhóm tự nhận thấy.
+
+    \item \textbf{Phân chia báo cáo theo chương thay vì theo mục nhỏ.} Ở giai đoạn 1, các thành viên nhận từng mục lẻ của chương 3 (3.1, 3.2.1, 3.2.2--3.2.3, 3.3.1, 3.3.2), dẫn đến nhiều lần chỉnh sửa chồng lấn trên cùng một file. Từ giai đoạn 4, mỗi thành viên phụ trách trọn một chương kèm quy định số trang cụ thể, nhờ đó số lần đụng độ khi gộp mã giảm rõ rệt.
+\end{enumerate}
