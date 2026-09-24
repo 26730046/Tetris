@@ -364,6 +364,14 @@ int main()
                 while (canMove(0, 1)) y++;
                 timer = dropSpeed;
             }
+            else if (c == 'p' || c == 'P' || c == 27) {
+                system("cls");
+                cout << "\n\n\n\n\n\n\t\t   ==== PAUSED ====\n";
+                cout << "\t\tNhan phim bat ky de tiep tuc...";
+                while(!kbhit()) Sleep(100);
+                getch(); // clear the pressed key
+                system("cls");
+            }
             else if (c == 'q') return 0;
         }
         
