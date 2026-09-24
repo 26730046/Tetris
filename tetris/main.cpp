@@ -12,6 +12,28 @@ char board[H][W] = {};
 int x, y, b, next_b;
 int dropSpeed = 500;
 int score = 0;
+
+int bag[7];
+int bag_index = 7; // force generation on first call
+
+void shuffleBag() {
+    for (int i = 0; i < 7; i++) bag[i] = i;
+    for (int i = 6; i > 0; i--) {
+        int j = rand() % (i + 1);
+        int temp = bag[i];
+        bag[i] = bag[j];
+        bag[j] = temp;
+    }
+}
+
+int getNextBlockType() {
+    if (bag_index >= 7) {
+        shuffleBag();
+        bag_index = 0;
+    }
+    return bag[bag_index++];
+}
+
 // --- TASK 1: Base Class & Quản lý bộ nhớ ---
 class Block {
 public:
@@ -302,9 +324,9 @@ int main()
     SetConsoleCursorInfo(GetStdHandle(STD_OUTPUT_HANDLE), &cursorInfo);
 
     srand(time(0));
-    x = 5; y = 1; b = rand() % 7;
+    x = 5; y = 1; b = getNextBlockType();
     loadCurrent();
-    next_b = rand() % 7;
+    next_b = getNextBlockType();
     loadNext();
     initBoard();
 
@@ -345,7 +367,7 @@ int main()
                 }
                 
                 loadCurrent();
-                next_b = rand() % 7;
+                next_b = getNextBlockType();
                 loadNext();
                 if (!canPlace(currentBlock, x, y)) {
                     system("cls");
