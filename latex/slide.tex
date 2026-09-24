@@ -1,0 +1,153 @@
+\documentclass[aspectratio=169]{beamer}
+\usetheme{Madrid}
+
+\usepackage[utf8]{vietnam}
+\usepackage{graphicx}
+\usepackage{booktabs}
+\usepackage{hyperref}
+
+% Cấu hình thông tin slide
+\title[Báo cáo Tetris]{Báo Cáo Quá Trình Làm Việc Nhóm\\Dự án Game Tetris (C++)}
+\author[Nhóm SS004]{
+    Phạm Ngọc Hoàng Long (26730046 - NT) \and 
+    Huỳnh Thị Kim Anh (26730002) \and \\
+    Hoàng Gia Huy (26730026) \and 
+    Lê Thành Nam (26730050) \and 
+    Phạm Mạnh Thiên Phúc (26730057)
+}
+\institute{
+    Môn: Kỹ năng nghề nghiệp (SS004) - GVHD: Nguyễn Văn Toàn\\
+    Trường Đại học Công nghệ Thông tin, ĐHQG TP.HCM
+}
+\date{Năm 2026}
+
+\begin{document}
+
+% ---------------------------------------------
+% BÌA
+% ---------------------------------------------
+\begin{frame}
+    \titlepage
+\end{frame}
+
+% ---------------------------------------------
+% GIỚI THIỆU NHÓM & LỚP
+% ---------------------------------------------
+\begin{frame}{Giới thiệu Thông tin Lớp và Nhóm thực hiện}
+    \textbf{Thông tin học phần:}
+    \begin{itemize}
+        \item \textbf{Môn học:} Kỹ năng nghề nghiệp
+        \item \textbf{Mã lớp:} SS004.F31.CN1.CNTT
+        \item \textbf{Giảng viên hướng dẫn:} ThS. Nguyễn Văn Toàn % Bạn có thể bỏ chữ ThS nếu không đúng học hàm/học vị
+    \end{itemize}
+    \vspace{0.3cm}
+    
+    \textbf{Danh sách thành viên Nhóm SS004:}
+    \begin{table}[]
+        \centering
+        \begin{tabular}{@{}llc@{}}
+        \toprule
+        \textbf{Họ và tên} & \textbf{MSSV} & \textbf{Vai trò} \\ \midrule
+        Phạm Ngọc Hoàng Long & 26730046 & Nhóm trưởng \\
+        Huỳnh Thị Kim Anh & 26730002 & Thành viên \\
+        Hoàng Gia Huy & 26730026 & Thành viên \\ 
+        Lê Thành Nam & 26730050 & Thành viên \\
+        Phạm Mạnh Thiên Phúc & 26730057 & Thành viên \\ \bottomrule
+        \end{tabular}
+    \end{table}
+\end{frame}
+
+% ---------------------------------------------
+% 1. CÁC CLASS, MODULE
+% ---------------------------------------------
+\begin{frame}{1. Cấu trúc Game: Các Module và Class chính}
+    \textbf{Ứng dụng console một luồng, sử dụng OOP (C++) chia thành các module:}
+    \begin{itemize}
+        \item \textbf{Module Vòng lặp \& Điều phối (Game Loop):} Quản lý phiên chơi, kiểm soát tốc độ khung hình (30ms/frame).
+        \item \textbf{Module Xử lý đầu vào (Input):} Đọc phím không chặn (\texttt{conio.h}).
+        \item \textbf{Module Mô hình \& Logic khối (Tetromino):} Các class kế thừa xử lý 7 loại khối, kiểm tra va chạm và xoay.
+        \item \textbf{Module Bảng chơi (Board):} Quản lý ma trận lưới, xử lý xóa dòng và tính điểm.
+        \item \textbf{Module Hiển thị (Render):} Vẽ lưới và mã màu ANSI (\texttt{windows.h}), vẽ đè không xóa màn hình.
+    \end{itemize}
+    \vspace{0.2cm}
+    \begin{center}
+        \textit{(Chèn ảnh \texttt{kien\_truc\_tong\_quan.png} từ thư mục báo cáo vào đây)}
+        % \includegraphics[height=3.5cm]{assets/kien_truc_tong_quan.png}
+    \end{center}
+\end{frame}
+
+% ---------------------------------------------
+% 2. PHÂN CÔNG SV CODE PHẦN NÀO
+% ---------------------------------------------
+\begin{frame}{2. Phân công Lập trình (Ai code phần nào)}
+    \begin{table}[]
+        \centering
+        \resizebox{\textwidth}{!}{%
+        \begin{tabular}{@{}llp{7cm}@{}}
+        \toprule
+        \textbf{Thành viên} & \textbf{MSSV} & \textbf{Module / Class phụ trách code chính} \\ \midrule
+        Phạm Ngọc Hoàng Long & 26730046 & Code \textbf{Module Vòng lặp \& Điều phối}, cấu trúc file \texttt{main.cpp} \\
+        Huỳnh Thị Kim Anh & 26730002 & Code \textbf{Module Hiển thị}, xử lý UI và màu sắc ANSI \\
+        Hoàng Gia Huy & 26730026 & Code \textbf{Module Mô hình khối (Tetromino)}, xử lý đa hình OOP \\ 
+        Lê Thành Nam & 26730050 & Code logic \textbf{Va chạm, Xoay khối} và \textbf{Xử lý Input} \\
+        Phạm Mạnh Thiên Phúc & 26730057 & Code \textbf{Module Bảng chơi (Board)}, thuật toán tính điểm \& xóa dòng \\ \bottomrule
+        \end{tabular}%
+        }
+    \end{table}
+    \textit{*Ghi chú: Vui lòng sửa lại cột cuối cho khớp chính xác với thực tế của nhóm.}
+\end{frame}
+
+% ---------------------------------------------
+% 3. CHỨNG MINH GIT - PHẦN 1: COMMIT
+% ---------------------------------------------
+\begin{frame}{3. Triển khai phân công trên Git: Ai code người đó commit}
+    \textbf{Minh chứng việc phân công bằng lịch sử Commit trên Git:}
+    \begin{itemize}
+        \item \textbf{Nhánh (Branch):} Các thành viên tạo nhánh tương ứng với phần được giao (vd: \texttt{feat-board}, \texttt{feat-ui}...).
+        \item \textbf{Lịch sử Commit:} Mỗi bạn chủ động commit phần code của mình.
+    \end{itemize}
+    \vspace{0.2cm}
+    \begin{columns}
+        \begin{column}{0.5\textwidth}
+            \textbf{Commit của Huy \& Phúc (Logic/Board)}\\
+            \textit{(Chèn ảnh chụp Git log / Github cho thấy Huy và Phúc commit code bảng chơi/khối)}\\
+            % \includegraphics[width=\textwidth]{assets/commit_logic.png}
+        \end{column}
+        \begin{column}{0.5\textwidth}
+            \textbf{Commit của Anh \& Nam (UI/Input)}\\
+            \textit{(Chèn ảnh chụp Git log / Github cho thấy Anh và Nam commit giao diện/input)}\\
+            % \includegraphics[width=\textwidth]{assets/commit_ui.png}
+        \end{column}
+    \end{columns}
+\end{frame}
+
+% ---------------------------------------------
+% 4. CHỨNG MINH GIT - PHẦN 2: CONFLICT
+% ---------------------------------------------
+\begin{frame}{4. Triển khai trên Git: Quản lý Code \& Giải quyết Conflict}
+    Khi ghép code từ nhiều thành viên (ví dụ: ghép Module Hiển thị vào Game Loop), Git xảy ra tình trạng \textbf{Merge Conflict}.\\
+    \vspace{0.2cm}
+    \textbf{Quá trình nhóm giải quyết Conflict thực tế:}
+    \begin{itemize}
+        \item \textbf{Nguyên nhân:} Bạn Long (Game Loop) và bạn Anh (Hiển thị) cùng đẩy code sửa trên file \texttt{main.cpp}.
+        \item \textbf{Xử lý:} Hai bạn xem xét các dòng code báo đỏ (HEAD và nhánh cần merge), chốt giữ lại vòng lặp của Long và hàm \texttt{draw()} của Anh.
+        \item \textbf{Kết quả:} \texttt{git add} và \texttt{git commit} để hoàn thành merge.
+    \end{itemize}
+    \vspace{0.2cm}
+    \begin{center}
+        \textit{(Chụp ảnh một đoạn code bị conflict hoặc log báo conflict trên terminal chèn vào đây)}\\
+        % \includegraphics[width=0.6\textwidth]{assets/git_conflict.png}
+    \end{center}
+\end{frame}
+
+% ---------------------------------------------
+% KẾT THÚC
+% ---------------------------------------------
+\begin{frame}
+    \centering
+    \Huge \textbf{Cảm ơn Thầy/Cô đã lắng nghe!}\\
+    \vspace{1cm}
+    \Large Nhóm rất mong nhận được câu hỏi từ Thầy/Cô.
+\end{frame}
+
+\end{document}
