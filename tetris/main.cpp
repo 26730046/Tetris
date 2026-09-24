@@ -185,12 +185,14 @@ void boardDelBlock(){
 }
 
 void rotate(){
+    int old_x = x;
+    
     currentBlock->rotate();
 
     const int kicks[] = {0, -1, 1, -2, 2};
     bool placed = false;
     for (int k = 0; k < 5; k++){
-        int nx = x + kicks[k];
+        int nx = old_x + kicks[k];
         if (canPlace(currentBlock, nx, y)){
             x = nx;
             placed = true;
@@ -199,6 +201,7 @@ void rotate(){
     }
     
     if (!placed) {
+        x = old_x;
         currentBlock->undoRotate();
     }
 }
@@ -280,10 +283,10 @@ int main()
         while (kbhit()){
             char c = getch();
             if (c == 'a' && canMove(-1,0)) x--;
-            if (c == 'd' && canMove( 1,0)) x++;
-            if (c == 'x' && canMove( 0,1)) y++;
-            if (c == 'w') rotate();
-            if (c == 'q') return 0;
+            else if (c == 'd' && canMove( 1,0)) x++;
+            else if (c == 'x' && canMove( 0,1)) y++;
+            else if (c == 'w') rotate(); // Xử lý phím w gọi thử xoay (Wall Kicks)
+            else if (c == 'q') return 0;
         }
         
         timer += 30; // 30ms per frame
