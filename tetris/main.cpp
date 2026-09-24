@@ -30,10 +30,120 @@ public:
 Block* currentBlock = nullptr;
 // ------------------------------------------
 
+class IBlock : public Block {
+public:
+    IBlock() {
+        char initialShape[4][4] = {
+            {' ', ' ', ' ', ' '},
+            {'I', 'I', 'I', 'I'},
+            {' ', ' ', ' ', ' '},
+            {' ', ' ', ' ', ' '}
+        };
+        for(int i=0; i<4; i++) for(int j=0; j<4; j++) shape[i][j] = initialShape[i][j];
+    }
+    void rotate() override {}
+    void undoRotate() override {}
+};
+
+class JBlock : public Block {
+public:
+    JBlock() {
+        char initialShape[4][4] = {
+            {'J', ' ', ' ', ' '},
+            {'J', 'J', 'J', ' '},
+            {' ', ' ', ' ', ' '},
+            {' ', ' ', ' ', ' '}
+        };
+        for(int i=0; i<4; i++) for(int j=0; j<4; j++) shape[i][j] = initialShape[i][j];
+    }
+    void rotate() override {}
+    void undoRotate() override {}
+};
+
+class LBlock : public Block {
+public:
+    LBlock() {
+        char initialShape[4][4] = {
+            {' ', ' ', 'L', ' '},
+            {'L', 'L', 'L', ' '},
+            {' ', ' ', ' ', ' '},
+            {' ', ' ', ' ', ' '}
+        };
+        for(int i=0; i<4; i++) for(int j=0; j<4; j++) shape[i][j] = initialShape[i][j];
+    }
+    void rotate() override {}
+    void undoRotate() override {}
+};
+
+class OBlock : public Block {
+public:
+    OBlock() {
+        char initialShape[4][4] = {
+            {' ', 'O', 'O', ' '},
+            {' ', 'O', 'O', ' '},
+            {' ', ' ', ' ', ' '},
+            {' ', ' ', ' ', ' '}
+        };
+        for(int i=0; i<4; i++) for(int j=0; j<4; j++) shape[i][j] = initialShape[i][j];
+    }
+    void rotate() override {}
+    void undoRotate() override {}
+};
+
+class SBlock : public Block {
+public:
+    SBlock() {
+        char initialShape[4][4] = {
+            {' ', 'S', 'S', ' '},
+            {'S', 'S', ' ', ' '},
+            {' ', ' ', ' ', ' '},
+            {' ', ' ', ' ', ' '}
+        };
+        for(int i=0; i<4; i++) for(int j=0; j<4; j++) shape[i][j] = initialShape[i][j];
+    }
+    void rotate() override {}
+    void undoRotate() override {}
+};
+
+class TBlock : public Block {
+public:
+    TBlock() {
+        char initialShape[4][4] = {
+            {' ', 'T', ' ', ' '},
+            {'T', 'T', 'T', ' '},
+            {' ', ' ', ' ', ' '},
+            {' ', ' ', ' ', ' '}
+        };
+        for(int i=0; i<4; i++) for(int j=0; j<4; j++) shape[i][j] = initialShape[i][j];
+    }
+    void rotate() override {}
+    void undoRotate() override {}
+};
+
+class ZBlock : public Block {
+public:
+    ZBlock() {
+        char initialShape[4][4] = {
+            {'Z', 'Z', ' ', ' '},
+            {' ', 'Z', 'Z', ' '},
+            {' ', ' ', ' ', ' '},
+            {' ', ' ', ' ', ' '}
+        };
+        for(int i=0; i<4; i++) for(int j=0; j<4; j++) shape[i][j] = initialShape[i][j];
+    }
+    void rotate() override {}
+    void undoRotate() override {}
+};
 void loadCurrent(){
-    for (int i = 0; i < 4; i++ )
-        for (int j = 0; j < 4; j++ )
-            current[i][j] = blocks[b][i][j];
+    switch (b) {
+        case 0: currentBlock = new IBlock(); break;
+        case 1: currentBlock = new JBlock(); break;
+        case 2: currentBlock = new LBlock(); break;
+        case 3: currentBlock = new OBlock(); break;
+        case 4: currentBlock = new SBlock(); break;
+        case 5: currentBlock = new TBlock(); break;
+        case 6: currentBlock = new ZBlock(); break;
+    }
 }
 
 bool canPlace(char shape[4][4], int nx, int ny){
@@ -49,20 +159,20 @@ bool canPlace(char shape[4][4], int nx, int ny){
 }
 
 bool canMove(int dx, int dy){
-    return canPlace(current, x + dx, y + dy);
+    return canPlace(currentBlock->shape, x + dx, y + dy);
 }
 
 void block2Board(){
     for (int i = 0; i < 4; i++ )
         for (int j = 0; j < 4; j++ )
-            if (current[i][j] != ' ')
-                board[y+i][x+j] = current[i][j];
+            if (currentBlock->shape[i][j] != ' ')
+                board[y+i][x+j] = currentBlock->shape[i][j];
 }
 
 void boardDelBlock(){
     for (int i = 0; i < 4; i++ )
         for (int j = 0; j < 4; j++ )
-            if (current[i][j] != ' ')
+            if (currentBlock->shape[i][j] != ' ')
                 board[y+i][x+j] = ' ';
 }
 
@@ -74,7 +184,7 @@ void rotateMatrix(char src[4][4], char dst[4][4]){
 
 void rotate(){
     char rotated[4][4];
-    rotateMatrix(current, rotated);
+    rotateMatrix(currentBlock->shape, rotated);
 
     const int kicks[] = {0, -1, 1, -2, 2};
     for (int k = 0; k < 5; k++){
@@ -83,7 +193,7 @@ void rotate(){
             x = nx;
             for (int i = 0; i < 4; i++ )
                 for (int j = 0; j < 4; j++ )
-                    current[i][j] = rotated[i][j];
+                    currentBlock->shape[i][j] = rotated[i][j];
             return;
         }
     }
@@ -185,7 +295,7 @@ int main()
                 }
                 
                 loadCurrent();
-                if (!canPlace(current, x, y)) {
+                if (!canPlace(currentBlock->shape, x, y)) {
                     system("cls");
                     cout << "\n\n\tGAME OVER!\n\tDiem so: " << score << "\n\n";
                     break;
