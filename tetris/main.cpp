@@ -9,7 +9,7 @@ using namespace std;
 #define W 15
 char board[H][W] = {};
 
-int x, y, b;
+int x, y, b, next_b;
 int dropSpeed = 500;
 int score = 0;
 // --- TASK 1: Base Class & Quản lý bộ nhớ ---
@@ -36,6 +36,7 @@ public:
 
 // Con trỏ đa hình thay thế cho mảng current và blocks
 Block* currentBlock = nullptr;
+Block* nextBlock = nullptr;
 // ------------------------------------------
 
 class IBlock : public Block {
@@ -154,6 +155,19 @@ void loadCurrent(){
     }
 }
 
+void loadNext(){
+    if (nextBlock != nullptr) delete nextBlock;
+    switch (next_b) {
+        case 0: nextBlock = new IBlock(); break;
+        case 1: nextBlock = new JBlock(); break;
+        case 2: nextBlock = new LBlock(); break;
+        case 3: nextBlock = new OBlock(); break;
+        case 4: nextBlock = new SBlock(); break;
+        case 5: nextBlock = new TBlock(); break;
+        case 6: nextBlock = new ZBlock(); break;
+    }
+}
+
 bool canPlace(Block* block, int nx, int ny){
     for (int i = 0; i < 4; i++ )
         for (int j = 0; j < 4; j++ )
@@ -230,8 +244,18 @@ void draw(){
 
     cout << "  Điểm số: " << score << "        \n";
 
-    for (int i = 0 ; i < H ; i++, cout<<endl)
+    for (int i = 0 ; i < H ; i++) {
         for (int j = 0 ; j < W ; j++) drawCell(board[i][j]);
+        
+        if (i == 2) cout << "    Next Block:";
+        else if (i >= 4 && i < 8 && nextBlock != nullptr) {
+            cout << "    ";
+            for (int j = 0; j < 4; j++) {
+                drawCell(nextBlock->shape[i-4][j]);
+            }
+        }
+        cout << endl;
+    }
 }
 
 void removeLine(){
@@ -280,6 +304,8 @@ int main()
     srand(time(0));
     x = 5; y = 1; b = rand() % 7;
     loadCurrent();
+    next_b = rand() % 7;
+    loadNext();
     initBoard();
 
     int timer = 0;
@@ -309,7 +335,8 @@ int main()
             } else {
                 block2Board();
                 removeLine();
-                x = 5; y = 1; b = rand() % 7;
+                x = 5; y = 1; 
+                b = next_b;
                 
                 // Giải phóng bộ nhớ khối cũ trước khi cấp phát khối mới (Người 1)
                 if (currentBlock != nullptr) {
@@ -318,6 +345,8 @@ int main()
                 }
                 
                 loadCurrent();
+                next_b = rand() % 7;
+                loadNext();
                 if (!canPlace(currentBlock, x, y)) {
                     system("cls");
                     cout << "\n\n\tGAME OVER!\n\tDiem so: " << score << "\n\n";
@@ -341,6 +370,9 @@ int main()
     
     if (currentBlock != nullptr) {
         delete currentBlock;
+    }
+    if (nextBlock != nullptr) {
+        delete nextBlock;
     }
     return 0;
 }
