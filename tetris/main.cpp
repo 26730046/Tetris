@@ -184,6 +184,13 @@ void boardDelBlock(){
                 board[y+i][x+j] = ' ';
 }
 
+void boardDelGhost(){
+    for (int i = 1; i < H-1; i++ )
+        for (int j = 1; j < W-1; j++ )
+            if (board[i][j] == '.')
+                board[i][j] = ' ';
+}
+
 void rotate(){
     int old_x = x;
     
@@ -215,6 +222,7 @@ void initBoard(){
 void drawCell(char c){
     if (c == ' ') cout << "  ";
     else if (c == '#') cout << "██"; 
+    else if (c == '.') cout << "░░";
     else cout << "[]";
 }
 void draw(){
@@ -278,6 +286,7 @@ int main()
     system("cls"); // Clear screen once at the beginning
     while (1){
         boardDelBlock();
+        boardDelGhost();
         
         // Handle input smoothly
         while (kbhit()){
@@ -317,6 +326,13 @@ int main()
             }
             timer = 0;
         }
+
+        int gy = y;
+        while (canPlace(currentBlock, x, gy + 1)) gy++;
+        for (int i = 0; i < 4; i++ )
+            for (int j = 0; j < 4; j++ )
+                if (currentBlock->shape[i][j] != ' ' && board[gy+i][x+j] == ' ')
+                    board[gy+i][x+j] = '.';
 
         block2Board();
         draw();
