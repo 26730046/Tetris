@@ -9,9 +9,33 @@ using namespace std;
 #define W 15
 char board[H][W] = {};
 
-int x, y, b;
+int x, y, b, next_b;
 int dropSpeed = 500;
 int score = 0;
+int level = 1;
+int totalLines = 0;
+
+int bag[7];
+int bag_index = 7; // force generation on first call
+
+void shuffleBag() {
+    for (int i = 0; i < 7; i++) bag[i] = i;
+    for (int i = 6; i > 0; i--) {
+        int j = rand() % (i + 1);
+        int temp = bag[i];
+        bag[i] = bag[j];
+        bag[j] = temp;
+    }
+}
+
+int getNextBlockType() {
+    if (bag_index >= 7) {
+        shuffleBag();
+        bag_index = 0;
+    }
+    return bag[bag_index++];
+}
+
 // --- TASK 1: Base Class & Quản lý bộ nhớ ---
 class Block {
 public:
@@ -36,6 +60,7 @@ public:
 
 // Con trỏ đa hình thay thế cho mảng current và blocks
 Block* currentBlock = nullptr;
+Block* nextBlock = nullptr;
 // ------------------------------------------
 
 class IBlock : public Block {
@@ -154,6 +179,19 @@ void loadCurrent(){
     }
 }
 
+void loadNext(){
+    if (nextBlock != nullptr) delete nextBlock;
+    switch (next_b) {
+        case 0: nextBlock = new IBlock(); break;
+        case 1: nextBlock = new JBlock(); break;
+        case 2: nextBlock = new LBlock(); break;
+        case 3: nextBlock = new OBlock(); break;
+        case 4: nextBlock = new SBlock(); break;
+        case 5: nextBlock = new TBlock(); break;
+        case 6: nextBlock = new ZBlock(); break;
+    }
+}
+
 bool canPlace(Block* block, int nx, int ny){
     for (int i = 0; i < 4; i++ )
         for (int j = 0; j < 4; j++ )
@@ -182,6 +220,13 @@ void boardDelBlock(){
         for (int j = 0; j < 4; j++ )
             if (currentBlock->shape[i][j] != ' ')
                 board[y+i][x+j] = ' ';
+}
+
+void boardDelGhost(){
+    for (int i = 1; i < H-1; i++ )
+        for (int j = 1; j < W-1; j++ )
+            if (board[i][j] == '.')
+                board[i][j] = ' ';
 }
 
 void rotate(){
@@ -214,19 +259,43 @@ void initBoard(){
 }
 void drawCell(char c){
     if (c == ' ') cout << "  ";
-    else if (c == '#') cout << "██"; 
-    else cout << "[]";
+    else if (c == '#') cout << "\x1B[37m██\x1B[0m"; 
+    else if (c == '.') cout << "\x1B[90m░░\x1B[0m"; // Gray for ghost
+    else {
+        switch(c) {
+            case 'I': cout << "\x1B[96m"; break; // Cyan
+            case 'J': cout << "\x1B[94m"; break; // Blue
+            case 'L': cout << "\x1B[33m"; break; // Orange/Brown
+            case 'O': cout << "\x1B[93m"; break; // Yellow
+            case 'S': cout << "\x1B[92m"; break; // Green
+            case 'T': cout << "\x1B[95m"; break; // Purple
+            case 'Z': cout << "\x1B[91m"; break; // Red
+            default:  cout << "\x1B[37m"; break; // White
+        }
+        cout << "[]\x1B[0m";
+    }
 }
 void draw(){
     cout << "\x1B[H"; 
 
-    cout << "  Điểm số: " << score << "        \n";
+    cout << "  Điểm số: " << score << "   Cấp độ: " << level << "        \n";
 
-    for (int i = 0 ; i < H ; i++, cout<<endl)
+    for (int i = 0 ; i < H ; i++) {
         for (int j = 0 ; j < W ; j++) drawCell(board[i][j]);
+        
+        if (i == 2) cout << "    Next Block:";
+        else if (i >= 4 && i < 8 && nextBlock != nullptr) {
+            cout << "    ";
+            for (int j = 0; j < 4; j++) {
+                drawCell(nextBlock->shape[i-4][j]);
+            }
+        }
+        cout << endl;
+    }
 }
 
 void removeLine(){
+    int linesCleared = 0;
     for (int i = H-2; i > 0; i--){
         bool full = true;
         for (int j = 1; j < W-1; j++){
@@ -236,7 +305,7 @@ void removeLine(){
             }
         }
         if (full){
-            score += 100;
+            linesCleared++;
             for (int ii = i; ii > 1; ii--)
                 for (int jj = 1; jj < W-1; jj++)
                     board[ii][jj] = board[ii-1][jj];
@@ -244,11 +313,25 @@ void removeLine(){
                 board[1][jj] = ' ';
 
             draw();
-            Sleep(200);
-
-            if (dropSpeed > 100) dropSpeed -= 50;
+            Sleep(100);
 
             i++; // kiểm tra lại dòng i vì vừa dịch xuống
+        }
+    }
+    
+    if (linesCleared > 0) {
+        if (linesCleared == 1) score += 100;
+        else if (linesCleared == 2) score += 300;
+        else if (linesCleared == 3) score += 500;
+        else if (linesCleared == 4) score += 800;
+        else score += 1000; // in case of more than 4, though impossible in standard tetris
+        
+        totalLines += linesCleared;
+        int newLevel = 1 + (totalLines / 10);
+        if (newLevel > level) {
+            level = newLevel;
+            dropSpeed = 500 - (level - 1) * 50;
+            if (dropSpeed < 50) dropSpeed = 50;
         }
     }
 }
@@ -269,58 +352,120 @@ int main()
     cursorInfo.bVisible = FALSE;
     SetConsoleCursorInfo(GetStdHandle(STD_OUTPUT_HANDLE), &cursorInfo);
 
-    srand(time(0));
-    x = 5; y = 1; b = rand() % 7;
-    loadCurrent();
-    initBoard();
+    // Start menu
+    system("cls");
+    cout << "\n\n\n\n\n\t\tTETRIS GAME\n";
+    cout << "\tNhan phim bat ky de bat dau...\n";
+    getch();
 
-    int timer = 0;
-    system("cls"); // Clear screen once at the beginning
-    while (1){
-        boardDelBlock();
+    while (true) {
+        // Reset state
+        score = 0;
+        level = 1;
+        totalLines = 0;
+        dropSpeed = 500;
+        bag_index = 7;
         
-        // Handle input smoothly
-        while (kbhit()){
-            char c = getch();
-            if (c == 'a' && canMove(-1,0)) x--;
-            else if (c == 'd' && canMove( 1,0)) x++;
-            else if (c == 'x' && canMove( 0,1)) y++;
-            else if (c == 'w') rotate(); // Xử lý phím w gọi thử xoay (Wall Kicks)
-            else if (c == 'q') return 0;
-        }
+        srand(time(0));
+        x = 5; y = 1; b = getNextBlockType();
+        loadCurrent();
+        next_b = getNextBlockType();
+        loadNext();
+        initBoard();
+
+        int timer = 0;
+        system("cls"); // Clear screen once at the beginning
         
-        timer += 30; // 30ms per frame
-        if (timer >= dropSpeed) {
-            if (canMove(0,1)) {
-                y++;
-            } else {
-                block2Board();
-                removeLine();
-                x = 5; y = 1; b = rand() % 7;
-                
-                // Giải phóng bộ nhớ khối cũ trước khi cấp phát khối mới (Người 1)
-                if (currentBlock != nullptr) {
-                    delete currentBlock;
-                    currentBlock = nullptr;
+        bool quitGame = false;
+        while (1){
+            boardDelBlock();
+            boardDelGhost();
+            
+            // Handle input smoothly
+            while (kbhit()){
+                char c = getch();
+                if (c == 'a' && canMove(-1,0)) x--;
+                else if (c == 'd' && canMove( 1,0)) x++;
+                else if (c == 'x' && canMove( 0,1)) y++;
+                else if (c == 'w') rotate(); // Xử lý phím w gọi thử xoay (Wall Kicks)
+                else if (c == ' ') {
+                    while (canMove(0, 1)) y++;
+                    timer = dropSpeed;
                 }
-                
-                loadCurrent();
-                if (!canPlace(currentBlock, x, y)) {
+                else if (c == 'p' || c == 'P' || c == 27) {
                     system("cls");
-                    cout << "\n\n\tGAME OVER!\n\tDiem so: " << score << "\n\n";
+                    cout << "\n\n\n\n\n\n\t\t   ==== PAUSED ====\n";
+                    cout << "\t\tNhan phim bat ky de tiep tuc...";
+                    while(!kbhit()) Sleep(100);
+                    getch(); // clear the pressed key
+                    system("cls");
+                }
+                else if (c == 'q') {
+                    quitGame = true;
                     break;
                 }
             }
-            timer = 0;
+            if (quitGame) break;
+            
+            timer += 30; // 30ms per frame
+            if (timer >= dropSpeed) {
+                if (canMove(0,1)) {
+                    y++;
+                } else {
+                    block2Board();
+                    removeLine();
+                    x = 5; y = 1; 
+                    b = next_b;
+                    
+                    // Giải phóng bộ nhớ khối cũ trước khi cấp phát khối mới (Người 1)
+                    if (currentBlock != nullptr) {
+                        delete currentBlock;
+                        currentBlock = nullptr;
+                    }
+                    
+                    loadCurrent();
+                    next_b = getNextBlockType();
+                    loadNext();
+                    if (!canPlace(currentBlock, x, y)) {
+                        break; // Game Over
+                    }
+                }
+                timer = 0;
+            }
+
+            int gy = y;
+            while (canPlace(currentBlock, x, gy + 1)) gy++;
+            for (int i = 0; i < 4; i++ )
+                for (int j = 0; j < 4; j++ )
+                    if (currentBlock->shape[i][j] != ' ' && board[gy+i][x+j] == ' ')
+                        board[gy+i][x+j] = '.';
+
+            block2Board();
+            draw();
+            Sleep(30);
+        }
+        
+        if (currentBlock != nullptr) {
+            delete currentBlock;
+            currentBlock = nullptr;
+        }
+        if (nextBlock != nullptr) {
+            delete nextBlock;
+            nextBlock = nullptr;
         }
 
-        block2Board();
-        draw();
-        Sleep(30);
+        if (quitGame) break;
+
+        system("cls");
+        cout << "\n\n\tGAME OVER!\n\tDiem so: " << score << "\n\n";
+        cout << "\tNhan 'R' de choi lai, 'Q' de thoat.\n";
+        char choice;
+        while (true) {
+            choice = getch();
+            if (choice == 'r' || choice == 'R' || choice == 'q' || choice == 'Q') break;
+        }
+        if (choice == 'q' || choice == 'Q') break;
     }
-    
-    if (currentBlock != nullptr) {
-        delete currentBlock;
-    }
+
     return 0;
 }
