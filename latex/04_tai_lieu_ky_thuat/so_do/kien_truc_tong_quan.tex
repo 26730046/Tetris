@@ -1,0 +1,46 @@
+\documentclass[border=6pt]{standalone}
+\usepackage[utf8]{inputenc}
+\usepackage[T5]{fontenc}
+\usepackage{tikz}
+\usetikzlibrary{arrows.meta, positioning}
+
+\begin{document}
+\begin{tikzpicture}[
+    font=\small,
+    mod/.style={rectangle, rounded corners=3pt, draw=blue!60!black, fill=blue!6, thick,
+                minimum height=1.2cm, align=center, text width=3.6cm},
+    core/.style={mod, draw=orange!70!black, fill=orange!10},
+    data/.style={mod, draw=green!45!black, fill=green!7},
+    io/.style={mod, draw=gray!70!black, fill=gray!10},
+    arr/.style={-{Stealth[length=2.5mm]}, thick, draw=black!70},
+    lbl/.style={font=\footnotesize, fill=white, inner sep=1pt}
+]
+    % Cột trái: vào / ra
+    \node[io]   (kb)    at (0, 0)      {\textbf{Bàn phím}\\ người chơi};
+    \node[mod]  (input) at (0, -2.2)   {\textbf{Xử lý đầu vào}\\ đọc phím không chặn};
+    \node[mod]  (rend)  at (0, -4.4)   {\textbf{Hiển thị}\\ bảng chơi, khối kế tiếp, điểm};
+    \node[io]   (con)   at (0, -6.6)   {\textbf{Màn hình console}\\ mã ANSI, UTF-8};
+
+    % Cột giữa: điều phối
+    \node[core] (loop)  at (5.2, -2.2) {\textbf{Vòng lặp trò chơi}\\ (Game Loop)};
+    \node[mod]  (phys)  at (5.2, -4.4) {\textbf{Va chạm \& Xoay}\\ kiểm tra vị trí, wall kick};
+    \node[data] (board) at (5.2, -6.6) {\textbf{Bảng chơi}\\ ma trận ký tự $20 \times 15$};
+
+    % Cột phải: khối gạch, xóa dòng
+    \node[mod]  (gen)   at (10.4, 0)    {\textbf{Bộ sinh khối}\\ 7-Bag Randomizer};
+    \node[mod]  (blk)   at (10.4, -2.2) {\textbf{Mô hình khối gạch}\\ lớp \texttt{Block} + 7 lớp con};
+    \node[mod]  (line)  at (10.4, -4.4) {\textbf{Xóa dòng \& Tính điểm}\\ điểm, cấp độ, tốc độ};
+
+    \draw[arr] (kb) -- (input);
+    \draw[arr] (input) -- node[lbl, above=2pt]{lệnh} (loop);
+    \draw[arr] (gen) -- node[lbl, right=2pt]{loại khối} (blk);
+    \draw[arr] (loop) -- node[lbl, above=2pt]{tạo / hủy} (blk);
+    \draw[arr] (loop) -- (phys);
+    \draw[arr] (loop.south east) -- (line.north west);
+    \draw[arr] (phys) -- node[lbl, right=2pt]{đọc / ghi} (board);
+    \draw[arr] (line.south) |- node[lbl, pos=0.25, right=2pt]{dồn hàng} (board.east);
+    \draw[arr] (loop.south west) -- (rend.north east);
+    \draw[arr] (board.north west) -- node[lbl]{đọc} (rend.south east);
+    \draw[arr] (rend) -- (con);
+\end{tikzpicture}
+\end{document}
