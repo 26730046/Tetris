@@ -82,7 +82,7 @@ Tetris/
 
 ## 📅 Phân Công Công Việc (Tuần 3)
 
-**Mục tiêu:** Ứng dụng Git vào làm việc nhóm và phát triển các tính năng cốt lõi của game Tetris đồng thời.
+**Mục tiêu:** Phát triển game.
 
 - **SV1 - Phạm Ngọc Hoàng Long (Nhóm trưởng / PM):**
   - Tạo Abstract Base Class Block chứa thuộc tính char shape[4][4].
@@ -113,3 +113,27 @@ Tetris/
 
 
 **Quy trình nộp bài:** Các thành viên sẽ tiến hành lập trình đồng thời trên các nhánh của mình. Xong việc thì submit (Push) lên Git repository và tạo yêu cầu gộp mã (Merge). Nhóm trưởng sẽ kiểm tra code ổn định trước khi hợp nhất.
+
+
+## 📅 Phân Công Công Việc (Tuần 4)
+
+**Mục tiêu:** Hoàn thiện nâng cấp game Tetris và hoàn thành bộ tài liệu báo cáo kỹ thuật trên LaTeX.
+
+- **SV1 - Phạm Ngọc Hoàng Long (Nhóm trưởng / PM):**
+  - Trực tiếp lập trình phần Nâng cấp Game: Thêm tính năng Ghost Piece, Hard Drop, Next Block Preview, thuật toán 7-Bag Randomizer, Hệ thống tính điểm & Level, giao diện màu sắc/Pause.
+  - Quản lý tiến độ chung của tuần 4.
+  - Biên tập, chỉnh sửa và tổng hợp master file Latex cuối cùng (đảm bảo layout, hình ảnh), xuất ra file PDF hoàn chỉnh.
+- **SV2 - Huỳnh Thị Kim Anh:**
+  - Phụ trách Latex phần: **Đánh giá việc thực hiện hợp đồng nhóm** (dựa theo tiêu chí ở hợp đồng nhóm).
+  - Phối hợp kiểm thử (test) các tính năng game mới, rà soát lỗi và hỗ trợ cung cấp mô tả giải thuật cho báo cáo.
+- **SV3 - Hoàng Gia Huy:**
+  - Phụ trách Latex phần: **Tài liệu kỹ thuật của trò chơi** (Độ dài: 2 - 10 trang).
+  - Giới thiệu các chức năng chính, các class/struct quan trọng, mô tả cấu trúc chương trình tổng thể. Vẽ diagram (sơ đồ lớp, sơ đồ luồng) để mô tả cách tổ chức dữ liệu và giải thuật (Lưu ý: Không copy nguyên code).
+- **SV4 - Lê Thành Nam:**
+  - Phụ trách Latex phần: **Mô tả quá trình làm việc nhóm** (Độ dài: 2 - 5 trang).
+  - Thu thập minh chứng trên Trello/Git/Slack. Nêu rõ các giai đoạn, khó khăn đã gặp và cách giải quyết, đánh giá quá trình phân chia và phân chia lại công việc của các thành viên.
+- **SV5 - Phạm Mạnh Thiên Phúc:**
+  - Phụ trách Latex phần: **Các kỹ năng mà nhóm đã áp dụng trong đồ án này** (Độ dài: 1 - 3 trang).
+  - Trình bày cụ thể các kỹ năng mềm và công cụ thực tế đã vận dụng trong đồ án.
+
+**Quy trình nộp bài Tuần 4:** Mã nguồn nâng cấp game gộp lên nhánh `main` của GitHub. Mã nguồn Latex gộp trên dự án Overleaf chung. Các thành viên phải tuân thủ đúng số trang quy định của từng phần báo cáo.
