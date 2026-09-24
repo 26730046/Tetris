@@ -154,10 +154,10 @@ void loadCurrent(){
     }
 }
 
-bool canPlace(char shape[4][4], int nx, int ny){
+bool canPlace(Block* block, int nx, int ny){
     for (int i = 0; i < 4; i++ )
         for (int j = 0; j < 4; j++ )
-            if (shape[i][j] != ' ') {
+            if (block->shape[i][j] != ' ') {
                 int xt = nx + j;
                 int yt = ny + i;
                 if (xt < 1 || xt >= W-1 || yt >= H-1 ) return false;
@@ -167,7 +167,7 @@ bool canPlace(char shape[4][4], int nx, int ny){
 }
 
 bool canMove(int dx, int dy){
-    return canPlace(currentBlock->shape, x + dx, y + dy);
+    return canPlace(currentBlock, x + dx, y + dy);
 }
 
 void block2Board(){
@@ -191,7 +191,7 @@ void rotate(){
     bool placed = false;
     for (int k = 0; k < 5; k++){
         int nx = x + kicks[k];
-        if (canPlace(currentBlock->shape, nx, y)){
+        if (canPlace(currentBlock, nx, y)){
             x = nx;
             placed = true;
             break;
@@ -299,7 +299,7 @@ int main()
                 }
                 
                 loadCurrent();
-                if (!canPlace(currentBlock->shape, x, y)) {
+                if (!canPlace(currentBlock, x, y)) {
                     system("cls");
                     cout << "\n\n\tGAME OVER!\n\tDiem so: " << score << "\n\n";
                     break;
