@@ -79,4 +79,37 @@ Tetris/
   - Tạo branch riêng để làm việc.
   - Viết logic tăng độ khó: mỗi khi nhóm xoá được dòng (gọi hàm `removeLine` thành công), tốc độ rơi của khối sẽ được tăng lên (thời gian `sleep` giảm xuống).
 
+
+## 📅 Phân Công Công Việc (Tuần 3)
+
+**Mục tiêu:** Ứng dụng Git vào làm việc nhóm và phát triển các tính năng cốt lõi của game Tetris đồng thời.
+
+- **SV1 - Phạm Ngọc Hoàng Long (Nhóm trưởng / PM):**
+  - Tạo Abstract Base Class Block chứa thuộc tính char shape[4][4].
+  - Khai báo các hàm ảo: virtual void rotate() và có thể là virtual Block* clone() (hoặc undoRotate()) để hỗ trợ việc khôi phục trạng thái nếu xoay bị vướng tường.
+  - Thay thế các mảng blocks và current toàn cục bằng con trỏ Block* currentBlock.
+  - Quản lý bộ nhớ ở hàm main: Thêm logic delete currentBlock khi kết thúc khối cũ trước khi gọi khối mới.
+  - Hỗ trợ các thành viên khác, review code trên Pull Request và thực hiện merge code vào nhánh `main` khi đã hoàn thiện.
+- **SV2 - Hoàng Gia Huy:** 
+  - Viết 7 class con kế thừa từ Block: IBlock, OBlock, TBlock, SBlock, ZBlock, JBlock, LBlock.
+  - Thiết lập ma trận đặc trưng cho từng khối bên trong hàm khởi tạo (constructor) của chúng.
+  - Sửa hàm loadCurrent() thành mô hình giống Factory Pattern: Sử dụng lệnh switch-case dựa trên biến b (từ 0-6) để new ra một đối tượng khối tương ứng và gán cho currentBlock.
+- **SV3 - Phạm Mạnh Thiên Phúc:** 
+  - Viết hàm rotate() mặc định trong class Block (thuật toán xoay ma trận 4x4 góc 90 độ theo chiều kim đồng hồ).
+  - Ghi đè (override) hàm rotate() cho OBlock (xoay khối vuông thì không cần làm gì cả).
+  - Ghi đè (override) hàm rotate() cho IBlock hoặc các khối đặc biệt khác nếu cần giới hạn trạng thái xoay (ví dụ khối chữ I chỉ xoay ngang và dọc).
+- **SV4 - Lê Thành Nam:** 
+  - Sửa lại hàm canPlace(...): Thay vì nhận mảng char shape[4][4], hãy sửa để nhận object Block* (hoặc trực tiếp gọi currentBlock->shape).
+  - Sửa lại hàm block2Board() (chép khối vào bảng).
+  - Sửa lại hàm boardDelBlock() (xóa khối khỏi bảng).
+  - Đảm bảo logic vẽ hình (draw()) vẫn hiển thị đúng.
+- **SV5 - Huỳnh Thị Kim Anh:** 
+  - Viết lại luồng xử lý phím w trong hàm main().
+  - Sửa hàm rotate() toàn cục cũ thành cơ chế thử xoay:
+    - Lưu trạng thái / hoặc clone currentBlock ra một bản nháp.
+    - Gọi hàm đa hình currentBlock->rotate().
+    - Áp dụng thuật toán Wall Kicks (thử các tọa độ lân cận x + kicks[k]) và dùng hàm canPlace() của Người 4 để kiểm tra.
+    - Nếu không có vị trí nào hợp lệ, khôi phục lại trạng thái cũ của khối. Nếu hợp lệ, cập nhật tọa độ x, y.
+
+
 **Quy trình nộp bài:** Các thành viên sẽ tiến hành lập trình đồng thời trên các nhánh của mình. Xong việc thì submit (Push) lên Git repository và tạo yêu cầu gộp mã (Merge). Nhóm trưởng sẽ kiểm tra code ổn định trước khi hợp nhất.
