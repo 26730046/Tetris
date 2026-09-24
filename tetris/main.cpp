@@ -215,10 +215,7 @@ void drawCell(char c){
     else cout << "[]";
 }
 void draw(){
-    COORD cursorPosition;
-    cursorPosition.X = 0;
-    cursorPosition.Y = 0;
-    SetConsoleCursorPosition(GetStdHandle(STD_OUTPUT_HANDLE), cursorPosition);
+    cout << "\x1B[H"; 
 
     cout << "  Điểm số: " << score << "        \n";
 
@@ -256,6 +253,12 @@ void removeLine(){
 int main()
 {
     SetConsoleOutputCP(CP_UTF8);
+
+    HANDLE hOut = GetStdHandle(STD_OUTPUT_HANDLE);
+    DWORD dwMode = 0;
+    GetConsoleMode(hOut, &dwMode);
+    dwMode |= 0x0004; // Bật ENABLE_VIRTUAL_TERMINAL_PROCESSING
+    SetConsoleMode(hOut, dwMode);
     
     // Ẩn con trỏ chuột nhấp nháy trên Console
     CONSOLE_CURSOR_INFO cursorInfo;
@@ -264,7 +267,7 @@ int main()
     SetConsoleCursorInfo(GetStdHandle(STD_OUTPUT_HANDLE), &cursorInfo);
 
     srand(time(0));
-    x = 5; y = 0; b = rand() % 7;
+    x = 5; y = 1; b = rand() % 7;
     loadCurrent();
     initBoard();
 
@@ -290,7 +293,7 @@ int main()
             } else {
                 block2Board();
                 removeLine();
-                x = 5; y = 0; b = rand() % 7;
+                x = 5; y = 1; b = rand() % 7;
                 
                 // Giải phóng bộ nhớ khối cũ trước khi cấp phát khối mới (Người 1)
                 if (currentBlock != nullptr) {
