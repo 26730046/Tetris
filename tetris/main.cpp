@@ -286,6 +286,10 @@ int main()
             else if (c == 'd' && canMove( 1,0)) x++;
             else if (c == 'x' && canMove( 0,1)) y++;
             else if (c == 'w') rotate(); // Xử lý phím w gọi thử xoay (Wall Kicks)
+            else if (c == ' ') {
+                while (canMove(0, 1)) y++;
+                timer = dropSpeed;
+            }
             else if (c == 'q') return 0;
         }
         
