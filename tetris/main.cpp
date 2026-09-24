@@ -20,10 +20,18 @@ public:
     virtual ~Block() {}
     
     // Hàm ảo để Người 3 cài đặt đa hình
-    virtual void rotate() = 0;
+    virtual void rotate() {
+        char temp[4][4];
+        for(int i=0; i<4; i++) for(int j=0; j<4; j++) temp[i][j] = shape[3-j][i];
+        for(int i=0; i<4; i++) for(int j=0; j<4; j++) shape[i][j] = temp[i][j];
+    }
     
     // Hàm ảo hỗ trợ khôi phục trạng thái cho Người 5
-    virtual void undoRotate() = 0;
+    virtual void undoRotate() {
+        char temp[4][4];
+        for(int i=0; i<4; i++) for(int j=0; j<4; j++) temp[i][j] = shape[j][3-i];
+        for(int i=0; i<4; i++) for(int j=0; j<4; j++) shape[i][j] = temp[i][j];
+    }
 };
 
 // Con trỏ đa hình thay thế cho mảng current và blocks
@@ -31,8 +39,10 @@ Block* currentBlock = nullptr;
 // ------------------------------------------
 
 class IBlock : public Block {
+    bool isVertical;
 public:
     IBlock() {
+        isVertical = false;
         char initialShape[4][4] = {
             {' ', ' ', ' ', ' '},
             {'I', 'I', 'I', 'I'},
@@ -41,8 +51,16 @@ public:
         };
         for(int i=0; i<4; i++) for(int j=0; j<4; j++) shape[i][j] = initialShape[i][j];
     }
-    void rotate() override {}
-    void undoRotate() override {}
+    void rotate() override {
+        isVertical = !isVertical;
+        for(int i=0; i<4; i++) for(int j=0; j<4; j++) shape[i][j] = ' ';
+        if (isVertical) {
+            shape[0][2] = 'I'; shape[1][2] = 'I'; shape[2][2] = 'I'; shape[3][2] = 'I';
+        } else {
+            shape[1][0] = 'I'; shape[1][1] = 'I'; shape[1][2] = 'I'; shape[1][3] = 'I';
+        }
+    }
+    void undoRotate() override { rotate(); }
 };
 
 class JBlock : public Block {
@@ -56,8 +74,6 @@ public:
         };
         for(int i=0; i<4; i++) for(int j=0; j<4; j++) shape[i][j] = initialShape[i][j];
     }
-    void rotate() override {}
-    void undoRotate() override {}
 };
 
 class LBlock : public Block {
@@ -71,8 +87,6 @@ public:
         };
         for(int i=0; i<4; i++) for(int j=0; j<4; j++) shape[i][j] = initialShape[i][j];
     }
-    void rotate() override {}
-    void undoRotate() override {}
 };
 
 class OBlock : public Block {
@@ -101,8 +115,6 @@ public:
         };
         for(int i=0; i<4; i++) for(int j=0; j<4; j++) shape[i][j] = initialShape[i][j];
     }
-    void rotate() override {}
-    void undoRotate() override {}
 };
 
 class TBlock : public Block {
@@ -116,8 +128,6 @@ public:
         };
         for(int i=0; i<4; i++) for(int j=0; j<4; j++) shape[i][j] = initialShape[i][j];
     }
-    void rotate() override {}
-    void undoRotate() override {}
 };
 
 class ZBlock : public Block {
@@ -131,8 +141,6 @@ public:
         };
         for(int i=0; i<4; i++) for(int j=0; j<4; j++) shape[i][j] = initialShape[i][j];
     }
-    void rotate() override {}
-    void undoRotate() override {}
 };
 void loadCurrent(){
     switch (b) {
@@ -176,26 +184,22 @@ void boardDelBlock(){
                 board[y+i][x+j] = ' ';
 }
 
-void rotateMatrix(char src[4][4], char dst[4][4]){
-    for (int i = 0; i < 4; i++ )
-        for (int j = 0; j < 4; j++ )
-            dst[i][j] = src[3-j][i];
-}
-
 void rotate(){
-    char rotated[4][4];
-    rotateMatrix(currentBlock->shape, rotated);
+    currentBlock->rotate();
 
     const int kicks[] = {0, -1, 1, -2, 2};
+    bool placed = false;
     for (int k = 0; k < 5; k++){
         int nx = x + kicks[k];
-        if (canPlace(rotated, nx, y)){
+        if (canPlace(currentBlock->shape, nx, y)){
             x = nx;
-            for (int i = 0; i < 4; i++ )
-                for (int j = 0; j < 4; j++ )
-                    currentBlock->shape[i][j] = rotated[i][j];
-            return;
+            placed = true;
+            break;
         }
+    }
+    
+    if (!placed) {
+        currentBlock->undoRotate();
     }
 }
 
