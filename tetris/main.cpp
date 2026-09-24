@@ -12,6 +12,8 @@ char board[H][W] = {};
 int x, y, b, next_b;
 int dropSpeed = 500;
 int score = 0;
+int level = 1;
+int totalLines = 0;
 
 int bag[7];
 int bag_index = 7; // force generation on first call
@@ -264,7 +266,7 @@ void drawCell(char c){
 void draw(){
     cout << "\x1B[H"; 
 
-    cout << "  Điểm số: " << score << "        \n";
+    cout << "  Điểm số: " << score << "   Cấp độ: " << level << "        \n";
 
     for (int i = 0 ; i < H ; i++) {
         for (int j = 0 ; j < W ; j++) drawCell(board[i][j]);
@@ -281,6 +283,7 @@ void draw(){
 }
 
 void removeLine(){
+    int linesCleared = 0;
     for (int i = H-2; i > 0; i--){
         bool full = true;
         for (int j = 1; j < W-1; j++){
@@ -290,7 +293,7 @@ void removeLine(){
             }
         }
         if (full){
-            score += 100;
+            linesCleared++;
             for (int ii = i; ii > 1; ii--)
                 for (int jj = 1; jj < W-1; jj++)
                     board[ii][jj] = board[ii-1][jj];
@@ -298,11 +301,25 @@ void removeLine(){
                 board[1][jj] = ' ';
 
             draw();
-            Sleep(200);
-
-            if (dropSpeed > 100) dropSpeed -= 50;
+            Sleep(100);
 
             i++; // kiểm tra lại dòng i vì vừa dịch xuống
+        }
+    }
+    
+    if (linesCleared > 0) {
+        if (linesCleared == 1) score += 100;
+        else if (linesCleared == 2) score += 300;
+        else if (linesCleared == 3) score += 500;
+        else if (linesCleared == 4) score += 800;
+        else score += 1000; // in case of more than 4, though impossible in standard tetris
+        
+        totalLines += linesCleared;
+        int newLevel = 1 + (totalLines / 10);
+        if (newLevel > level) {
+            level = newLevel;
+            dropSpeed = 500 - (level - 1) * 50;
+            if (dropSpeed < 50) dropSpeed = 50;
         }
     }
 }
