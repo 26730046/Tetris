@@ -259,9 +259,21 @@ void initBoard(){
 }
 void drawCell(char c){
     if (c == ' ') cout << "  ";
-    else if (c == '#') cout << "██"; 
-    else if (c == '.') cout << "░░";
-    else cout << "[]";
+    else if (c == '#') cout << "\x1B[37m██\x1B[0m"; 
+    else if (c == '.') cout << "\x1B[90m░░\x1B[0m"; // Gray for ghost
+    else {
+        switch(c) {
+            case 'I': cout << "\x1B[96m"; break; // Cyan
+            case 'J': cout << "\x1B[94m"; break; // Blue
+            case 'L': cout << "\x1B[33m"; break; // Orange/Brown
+            case 'O': cout << "\x1B[93m"; break; // Yellow
+            case 'S': cout << "\x1B[92m"; break; // Green
+            case 'T': cout << "\x1B[95m"; break; // Purple
+            case 'Z': cout << "\x1B[91m"; break; // Red
+            default:  cout << "\x1B[37m"; break; // White
+        }
+        cout << "[]\x1B[0m";
+    }
 }
 void draw(){
     cout << "\x1B[H"; 
