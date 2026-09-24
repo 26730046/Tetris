@@ -12,49 +12,152 @@ char board[H][W] = {};
 int x, y, b;
 int dropSpeed = 500;
 int score = 0;
-char current[4][4];
-
-char blocks[][4][4] = {
-        {{' ',' ',' ',' '},
-         {'I','I','I','I'},
-         {' ',' ',' ',' '},
-         {' ',' ',' ',' '}},
-        {{' ',' ',' ',' '},
-         {' ','O','O',' '},
-         {' ','O','O',' '},
-         {' ',' ',' ',' '}},
-        {{' ',' ',' ',' '},
-         {' ','T',' ',' '},
-         {'T','T','T',' '},
-         {' ',' ',' ',' '}},
-        {{' ',' ',' ',' '},
-         {' ','S','S',' '},
-         {'S','S',' ',' '},
-         {' ',' ',' ',' '}},
-        {{' ',' ',' ',' '},
-         {'Z','Z',' ',' '},
-         {' ','Z','Z',' '},
-         {' ',' ',' ',' '}},
-        {{' ',' ',' ',' '},
-         {'J',' ',' ',' '},
-         {'J','J','J',' '},
-         {' ',' ',' ',' '}},
-        {{' ',' ',' ',' '},
-         {' ',' ','L',' '},
-         {'L','L','L',' '},
-         {' ',' ',' ',' '}}
+// --- TASK 1: Base Class & Quản lý bộ nhớ ---
+class Block {
+public:
+    char shape[4][4];
+    
+    virtual ~Block() {}
+    
+    // Hàm ảo để Người 3 cài đặt đa hình
+    virtual void rotate() {
+        char temp[4][4];
+        for(int i=0; i<4; i++) for(int j=0; j<4; j++) temp[i][j] = shape[3-j][i];
+        for(int i=0; i<4; i++) for(int j=0; j<4; j++) shape[i][j] = temp[i][j];
+    }
+    
+    // Hàm ảo hỗ trợ khôi phục trạng thái cho Người 5
+    virtual void undoRotate() {
+        char temp[4][4];
+        for(int i=0; i<4; i++) for(int j=0; j<4; j++) temp[i][j] = shape[j][3-i];
+        for(int i=0; i<4; i++) for(int j=0; j<4; j++) shape[i][j] = temp[i][j];
+    }
 };
 
+// Con trỏ đa hình thay thế cho mảng current và blocks
+Block* currentBlock = nullptr;
+// ------------------------------------------
+
+class IBlock : public Block {
+    bool isVertical;
+public:
+    IBlock() {
+        isVertical = false;
+        char initialShape[4][4] = {
+            {' ', ' ', ' ', ' '},
+            {'I', 'I', 'I', 'I'},
+            {' ', ' ', ' ', ' '},
+            {' ', ' ', ' ', ' '}
+        };
+        for(int i=0; i<4; i++) for(int j=0; j<4; j++) shape[i][j] = initialShape[i][j];
+    }
+    void rotate() override {
+        isVertical = !isVertical;
+        for(int i=0; i<4; i++) for(int j=0; j<4; j++) shape[i][j] = ' ';
+        if (isVertical) {
+            shape[0][2] = 'I'; shape[1][2] = 'I'; shape[2][2] = 'I'; shape[3][2] = 'I';
+        } else {
+            shape[1][0] = 'I'; shape[1][1] = 'I'; shape[1][2] = 'I'; shape[1][3] = 'I';
+        }
+    }
+    void undoRotate() override { rotate(); }
+};
+
+class JBlock : public Block {
+public:
+    JBlock() {
+        char initialShape[4][4] = {
+            {'J', ' ', ' ', ' '},
+            {'J', 'J', 'J', ' '},
+            {' ', ' ', ' ', ' '},
+            {' ', ' ', ' ', ' '}
+        };
+        for(int i=0; i<4; i++) for(int j=0; j<4; j++) shape[i][j] = initialShape[i][j];
+    }
+};
+
+class LBlock : public Block {
+public:
+    LBlock() {
+        char initialShape[4][4] = {
+            {' ', ' ', 'L', ' '},
+            {'L', 'L', 'L', ' '},
+            {' ', ' ', ' ', ' '},
+            {' ', ' ', ' ', ' '}
+        };
+        for(int i=0; i<4; i++) for(int j=0; j<4; j++) shape[i][j] = initialShape[i][j];
+    }
+};
+
+class OBlock : public Block {
+public:
+    OBlock() {
+        char initialShape[4][4] = {
+            {' ', 'O', 'O', ' '},
+            {' ', 'O', 'O', ' '},
+            {' ', ' ', ' ', ' '},
+            {' ', ' ', ' ', ' '}
+        };
+        for(int i=0; i<4; i++) for(int j=0; j<4; j++) shape[i][j] = initialShape[i][j];
+    }
+    void rotate() override {}
+    void undoRotate() override {}
+};
+
+class SBlock : public Block {
+public:
+    SBlock() {
+        char initialShape[4][4] = {
+            {' ', 'S', 'S', ' '},
+            {'S', 'S', ' ', ' '},
+            {' ', ' ', ' ', ' '},
+            {' ', ' ', ' ', ' '}
+        };
+        for(int i=0; i<4; i++) for(int j=0; j<4; j++) shape[i][j] = initialShape[i][j];
+    }
+};
+
+class TBlock : public Block {
+public:
+    TBlock() {
+        char initialShape[4][4] = {
+            {' ', 'T', ' ', ' '},
+            {'T', 'T', 'T', ' '},
+            {' ', ' ', ' ', ' '},
+            {' ', ' ', ' ', ' '}
+        };
+        for(int i=0; i<4; i++) for(int j=0; j<4; j++) shape[i][j] = initialShape[i][j];
+    }
+};
+
+class ZBlock : public Block {
+public:
+    ZBlock() {
+        char initialShape[4][4] = {
+            {'Z', 'Z', ' ', ' '},
+            {' ', 'Z', 'Z', ' '},
+            {' ', ' ', ' ', ' '},
+            {' ', ' ', ' ', ' '}
+        };
+        for(int i=0; i<4; i++) for(int j=0; j<4; j++) shape[i][j] = initialShape[i][j];
+    }
+};
 void loadCurrent(){
-    for (int i = 0; i < 4; i++ )
-        for (int j = 0; j < 4; j++ )
-            current[i][j] = blocks[b][i][j];
+    switch (b) {
+        case 0: currentBlock = new IBlock(); break;
+        case 1: currentBlock = new JBlock(); break;
+        case 2: currentBlock = new LBlock(); break;
+        case 3: currentBlock = new OBlock(); break;
+        case 4: currentBlock = new SBlock(); break;
+        case 5: currentBlock = new TBlock(); break;
+        case 6: currentBlock = new ZBlock(); break;
+    }
 }
 
-bool canPlace(char shape[4][4], int nx, int ny){
+bool canPlace(Block* block, int nx, int ny){
     for (int i = 0; i < 4; i++ )
         for (int j = 0; j < 4; j++ )
-            if (shape[i][j] != ' ') {
+            if (block->shape[i][j] != ' ') {
                 int xt = nx + j;
                 int yt = ny + i;
                 if (xt < 1 || xt >= W-1 || yt >= H-1 ) return false;
@@ -64,43 +167,42 @@ bool canPlace(char shape[4][4], int nx, int ny){
 }
 
 bool canMove(int dx, int dy){
-    return canPlace(current, x + dx, y + dy);
+    return canPlace(currentBlock, x + dx, y + dy);
 }
 
 void block2Board(){
     for (int i = 0; i < 4; i++ )
         for (int j = 0; j < 4; j++ )
-            if (current[i][j] != ' ')
-                board[y+i][x+j] = current[i][j];
+            if (currentBlock->shape[i][j] != ' ')
+                board[y+i][x+j] = currentBlock->shape[i][j];
 }
 
 void boardDelBlock(){
     for (int i = 0; i < 4; i++ )
         for (int j = 0; j < 4; j++ )
-            if (current[i][j] != ' ')
+            if (currentBlock->shape[i][j] != ' ')
                 board[y+i][x+j] = ' ';
 }
 
-void rotateMatrix(char src[4][4], char dst[4][4]){
-    for (int i = 0; i < 4; i++ )
-        for (int j = 0; j < 4; j++ )
-            dst[i][j] = src[3-j][i];
-}
-
 void rotate(){
-    char rotated[4][4];
-    rotateMatrix(current, rotated);
+    int old_x = x;
+    
+    currentBlock->rotate();
 
     const int kicks[] = {0, -1, 1, -2, 2};
+    bool placed = false;
     for (int k = 0; k < 5; k++){
-        int nx = x + kicks[k];
-        if (canPlace(rotated, nx, y)){
+        int nx = old_x + kicks[k];
+        if (canPlace(currentBlock, nx, y)){
             x = nx;
-            for (int i = 0; i < 4; i++ )
-                for (int j = 0; j < 4; j++ )
-                    current[i][j] = rotated[i][j];
-            return;
+            placed = true;
+            break;
         }
+    }
+    
+    if (!placed) {
+        x = old_x;
+        currentBlock->undoRotate();
     }
 }
 
@@ -116,10 +218,7 @@ void drawCell(char c){
     else cout << "[]";
 }
 void draw(){
-    COORD cursorPosition;
-    cursorPosition.X = 0;
-    cursorPosition.Y = 0;
-    SetConsoleCursorPosition(GetStdHandle(STD_OUTPUT_HANDLE), cursorPosition);
+    cout << "\x1B[H"; 
 
     cout << "  Điểm số: " << score << "        \n";
 
@@ -157,6 +256,12 @@ void removeLine(){
 int main()
 {
     SetConsoleOutputCP(CP_UTF8);
+
+    HANDLE hOut = GetStdHandle(STD_OUTPUT_HANDLE);
+    DWORD dwMode = 0;
+    GetConsoleMode(hOut, &dwMode);
+    dwMode |= 0x0004; // Bật ENABLE_VIRTUAL_TERMINAL_PROCESSING
+    SetConsoleMode(hOut, dwMode);
     
     // Ẩn con trỏ chuột nhấp nháy trên Console
     CONSOLE_CURSOR_INFO cursorInfo;
@@ -165,7 +270,7 @@ int main()
     SetConsoleCursorInfo(GetStdHandle(STD_OUTPUT_HANDLE), &cursorInfo);
 
     srand(time(0));
-    x = 5; y = 0; b = rand() % 7;
+    x = 5; y = 1; b = rand() % 7;
     loadCurrent();
     initBoard();
 
@@ -178,10 +283,10 @@ int main()
         while (kbhit()){
             char c = getch();
             if (c == 'a' && canMove(-1,0)) x--;
-            if (c == 'd' && canMove( 1,0)) x++;
-            if (c == 'x' && canMove( 0,1)) y++;
-            if (c == 'w') rotate();
-            if (c == 'q') return 0;
+            else if (c == 'd' && canMove( 1,0)) x++;
+            else if (c == 'x' && canMove( 0,1)) y++;
+            else if (c == 'w') rotate(); // Xử lý phím w gọi thử xoay (Wall Kicks)
+            else if (c == 'q') return 0;
         }
         
         timer += 30; // 30ms per frame
@@ -191,9 +296,16 @@ int main()
             } else {
                 block2Board();
                 removeLine();
-                x = 5; y = 0; b = rand() % 7;
+                x = 5; y = 1; b = rand() % 7;
+                
+                // Giải phóng bộ nhớ khối cũ trước khi cấp phát khối mới (Người 1)
+                if (currentBlock != nullptr) {
+                    delete currentBlock;
+                    currentBlock = nullptr;
+                }
+                
                 loadCurrent();
-                if (!canPlace(current, x, y)) {
+                if (!canPlace(currentBlock, x, y)) {
                     system("cls");
                     cout << "\n\n\tGAME OVER!\n\tDiem so: " << score << "\n\n";
                     break;
@@ -205,6 +317,10 @@ int main()
         block2Board();
         draw();
         Sleep(30);
+    }
+    
+    if (currentBlock != nullptr) {
+        delete currentBlock;
     }
     return 0;
 }
