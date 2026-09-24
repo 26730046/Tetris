@@ -1,27 +1,60 @@
 \section{Nhật ký làm việc và Quản lý tiến độ}
 
-\subsection{Nhật ký các buổi họp nhóm (Meeting Minutes)}
-% [Gợi ý nội dung: Liệt kê các buổi họp quan trọng: Buổi 1 (Khởi động dự án & ký hợp đồng), Buổi 2 (Chốt kiến trúc & phân chia module), Buổi 3 (Review code & ghép nối hệ thống), Buổi 4 (Kiểm thử & hoàn thiện báo cáo)]
+\subsection{Nhật ký tiến độ theo tuần}
+
+Nhật ký dưới đây được dựng lại từ lịch sử commit và Pull Request, nên mốc thời gian là lúc công việc thực sự được đưa lên kho mã nguồn chung, không phải thời điểm dự kiến trong kế hoạch.
+
+\begin{longtable}{|c|p{2.3cm}|p{7.6cm}|p{5.5cm}|}
+    \caption{Nhật ký tiến độ thực tế của nhóm qua các tuần}
+    \label{tab:nhat_ky_tuan} \\
+    \hline
+    \textbf{Tuần} & \textbf{Thời gian} & \textbf{Công việc đã hoàn thành} & \textbf{Minh chứng} \\
+    \hline
+    \endfirsthead
+    \hline
+    \textbf{Tuần} & \textbf{Thời gian} & \textbf{Công việc đã hoàn thành} & \textbf{Minh chứng} \\
+    \hline
+    \endhead
+    1 & 10/09 -- 15/09 & Chốt đề tài, khởi tạo kho GitHub cùng khung thư mục \LaTeX\ 7 chương, lập các kênh Trello, Slack và Overleaf. & Commit \texttt{761dc68}. \\
+    \hline
+    2 & 16/09 -- 17/09 & Viết đồng loạt các mục của chương giới thiệu (3.1, 3.2.1--3.2.3, 3.3.1, 3.3.2); hoàn tất hợp đồng nhóm và bảng liên kết công cụ. & 11 commit nội dung, 10 lượt gộp nhánh; các PR \#1--\#8. \\
+    \hline
+    3 & 21/09 -- 22/09 & Lập trình song song: nhóm trưởng gỡ hàm \texttt{removeLine()} khỏi mã gốc để chia việc, Hoàng Gia Huy chỉnh giao diện khối gạch, Phạm Mạnh Thiên Phúc viết logic tăng độ khó. & Các PR \#9, \#10, \#12, \#13; commit \texttt{d837086}, \texttt{cbae6d6}, \texttt{69bc8d7}. \\
+    \hline
+    4 & 23/09 & Huỳnh Thị Kim Anh hoàn thành \texttt{removeLine()}; Lê Thành Nam nộp thuật toán xoay kèm mục 4.2.5; nhóm trưởng sửa một loạt lỗi trải nghiệm rồi dựng lớp cơ sở \texttt{Block}. & Các PR \#14--\#17; commit \texttt{b80d691}, \texttt{2a9774b}, \texttt{1122d6f}, \texttt{aa84e89}. \\
+    \hline
+    5 & 24/09 & Hoàn tất tái cấu trúc hướng đối tượng (7 lớp con, logic xoay, \textit{wall kicks}, các hàm bàn cờ dùng con trỏ đối tượng); buổi tối nâng cấp trò chơi với 8 tính năng mới và chia bốn chương báo cáo còn lại. & Các PR \#18--\#24; commit \texttt{2841ab1}, \texttt{63d0afd}, \texttt{e2662ea}, chuỗi \texttt{d520456}--\texttt{ed654bd}, \texttt{10355e2}. \\
+    \hline
+\end{longtable}
+
+Nhóm không họp theo lịch cố định mà chốt việc theo từng đợt, thông báo trên Slack và ghi lại bằng một thay đổi cụ thể trong kho mã nguồn. Năm mốc chốt việc quan trọng nhất là: chốt đề tài và bộ công cụ (10/09), ký hợp đồng nhóm (17/09), chốt phân công tuần 2 theo hướng mỗi người một tính năng trên một nhánh riêng (21/09, commit \texttt{0abac71}), rà soát lần hai toàn bộ phần lõi trò chơi trước khi tái cấu trúc (23/09, nhánh \texttt{26730046\_review\_lan\_2} với 5 commit sửa lỗi) và chốt phân công tuần 4 kèm quy định số trang cho từng chương báo cáo (24/09, commit \texttt{10355e2}).
+
+\subsection{Quản lý tiến độ trên Trello, Slack và GitHub}
+
+Ba công cụ được nhóm phân vai rõ ràng để tránh trùng lặp thông tin. \textbf{Trello} giữ vai trò bảng tiến độ trực quan: mỗi nhiệm vụ trong bảng phân công hằng tuần thành một thẻ, gán cho đúng thành viên và di chuyển lần lượt qua các cột \textit{To-do}, \textit{In Progress}, \textit{Review}, \textit{Done}, nhờ đó cả nhóm biết ai đang vướng ở đâu mà không cần hỏi lại. \textbf{Slack} là kênh trao đổi nhanh: thông báo khi có Pull Request cần duyệt, hỏi đáp lúc gặp lỗi biên dịch và nhắc hạn nộp. \textbf{GitHub} lưu bằng chứng cuối cùng cho mọi đóng góp, với quy ước mỗi thành viên làm trên nhánh riêng đặt tên theo định dạng \texttt{<MSSV>\_<tên\_công\_việc>} (ví dụ \texttt{26730002\_removeLine}), sau đó tạo Pull Request để nhóm trưởng duyệt và gộp.
+
+Tính đến ngày 24/09, nhánh \texttt{master} có 70 commit, trong đó 41 commit nội dung và 29 lượt gộp nhánh; kho mã nguồn có 24 nhánh và 24 Pull Request được tạo, 23 trong số đó đã được gộp. Bảng~\ref{tab:thong_ke_git} thống kê số commit nội dung theo từng thành viên.
+
 \begin{table}[H]
     \centering
-    \caption{Nhật ký các buổi họp định kỳ của nhóm}
-    \label{tab:nhat_ky_hop}
-    \renewcommand{\arraystretch}{1.5}
-    \begin{tabularx}{\textwidth}{|c|c|p{3.5cm}|X|}
+    \caption{Thống kê số commit nội dung trên nhánh \texttt{master} theo thành viên}
+    \label{tab:thong_ke_git}
+    \renewcommand{\arraystretch}{1.3}
+    \begin{tabularx}{\textwidth}{|c|p{4.2cm}|c|X|}
         \hline
-        \textbf{Buổi} & \textbf{Thời gian} & \textbf{Hình thức / Địa điểm} & \textbf{Nội dung chính \& Kết quả đạt được} \\
+        \textbf{STT} & \textbf{Thành viên} & \textbf{Số commit} & \textbf{Ghi chú} \\
         \hline
-        1 & \textit{[Ngày/Tuần]} & \textit{[Online/Offline]} & \textit{[Nội dung cuộc họp \& Kết quả]} \\
+        1 & Phạm Ngọc Hoàng Long & 29 & Lập trình lõi, toàn bộ tính năng nâng cấp và quản trị kho mã nguồn. \\
         \hline
-        2 & \textit{[Ngày/Tuần]} & \textit{[Online/Offline]} & \textit{[Nội dung cuộc họp \& Kết quả]} \\
+        2 & Phạm Mạnh Thiên Phúc & 5 & Logic tăng độ khó và các mục 3.2.2--3.2.3. \\
         \hline
-        3 & \textit{[Ngày/Tuần]} & \textit{[Online/Offline]} & \textit{[Nội dung cuộc họp \& Kết quả]} \\
+        3 & Huỳnh Thị Kim Anh & 3 & Hai commit đầu hiển thị tác giả là \textit{unknown} do chưa cấu hình Git. \\
         \hline
-        \dots & \dots & \dots & \dots \\
+        4 & Lê Thành Nam & 2 & Thuật toán xoay khối (mục 4.2.5) và mục 3.3.2. \\
+        \hline
+        5 & Hoàng Gia Huy & 2 & Hai commit ghi dưới hai danh xưng khác nhau. \\
         \hline
     \end{tabularx}
 \end{table}
 
-\subsection{Quản lý tiến độ trên Trello và GitHub}
-% [Gợi ý nội dung: Trình bày số lượng task hoàn thành trên Trello, số lượng commit / Pull Request trên GitHub, cách nhóm cập nhật trạng thái hàng ngày]
-\textit{[Nội dung bổ sung sau: Hình ảnh minh họa bảng Trello và biểu đồ commit GitHub]}
+Số commit chênh lệch khá lớn, nhưng không phản ánh trọn vẹn khối lượng đóng góp: phần lớn nội dung báo cáo được soạn song song trên Overleaf rồi mới đưa về GitHub theo từng đợt, nên một commit có thể tương ứng với nhiều giờ làm việc. Dù vậy, nhóm vẫn xem đây là chỉ dấu cho thấy công việc đang dồn về phía nhóm trưởng.
