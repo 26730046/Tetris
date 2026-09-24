@@ -1,11 +1,78 @@
 \section{Cấu trúc dữ liệu và Thuật toán cốt lõi}
 
 \subsection{Cấu trúc dữ liệu chính}
-% [Gợi ý nội dung: 
-% 1. Ma trận bàn cờ: char board[H][W] kích thước H x W với các viền '#' và khoảng trống ' '
-% 2. Mảng khối gạch: char blocks[][4][4] định nghĩa các trạng thái xoay của 7 khối Tetromino
-% 3. Các biến trạng thái: tọa độ x, y, chỉ số khối b, điểm số score...]
-\textit{[Nội dung bổ sung sau: Phân tích chi tiết các mảng và biến toàn cục/cục bộ]}
+
+\subsubsection{Ma trận bảng chơi và biến trạng thái}
+
+Bảng chơi là một mảng hai chiều kiểu ký tự kích thước $H \times W = 20 \times 15$. Ý nghĩa của mỗi ô được mã hóa bằng chính ký tự trong ô đó (Bảng~\ref{tab:ky_tu_bang_choi}). Nhờ vậy, một ma trận duy nhất vừa dùng để kiểm tra va chạm, vừa dùng để hiển thị.
+
+\begin{table}[H]
+    \centering
+    \caption{Ý nghĩa các ký tự trong ma trận bảng chơi}
+    \label{tab:ky_tu_bang_choi}
+    \renewcommand{\arraystretch}{1.3}
+    \begin{tabularx}{\textwidth}{|p{3.2cm}|X|}
+        \hline
+        \textbf{Ký tự} & \textbf{Ý nghĩa} \\
+        \hline
+        \texttt{\#} & Tường bao quanh (hàng đầu, hàng cuối, cột đầu, cột cuối). \\
+        \hline
+        khoảng trắng & Ô trống, khối gạch có thể đi vào. \\
+        \hline
+        \texttt{I J L O S T Z} & Ô bị chiếm bởi khối. Chữ cái cho biết loại khối để chọn màu khi vẽ. \\
+        \hline
+        \texttt{.} & Bóng mờ (ghost piece): chỉ dùng để hiển thị, bị xóa ở đầu mỗi khung hình. \\
+        \hline
+    \end{tabularx}
+\end{table}
+
+Vùng chơi thực tế là $18 \times 13$ ô. Lớp tường bao quanh đóng vai trò lớp đệm: khi kiểm tra va chạm, chỉ cần xem ô đích có trống hay không, không phải xử lý riêng từng trường hợp chạm biên.
+
+Trạng thái ván chơi gồm các biến toàn cục sau:
+\begin{itemize}
+    \item Tọa độ $(x, y)$ của góc trên bên trái ma trận $4 \times 4$ chứa khối đang rơi.
+    \item Hai con trỏ \texttt{currentBlock} và \texttt{nextBlock}, trỏ tới khối đang rơi và khối kế tiếp.
+    \item Túi 7 khối cùng chỉ số lấy khối trong túi.
+    \item Điểm số, cấp độ, tổng số dòng đã xóa, và tốc độ rơi (tính bằng ms).
+\end{itemize}
+
+\subsubsection{Hệ thống lớp \texttt{Block}}
+
+Mỗi khối Tetromino là một ma trận ký tự $4 \times 4$: ô chứa chữ cái thuộc về khối, ô chứa khoảng trắng là phần rỗng. Nhóm thiết kế theo hướng đối tượng, gồm một lớp cơ sở \texttt{Block} và 7 lớp con (Hình~\ref{fig:so_do_lop}).
+
+\begin{figure}[H]
+    \centering
+    \includegraphics[width=\textwidth]{04_tai_lieu_ky_thuat/so_do/so_do_lop.png}
+    \caption{Sơ đồ lớp của hệ thống khối gạch Tetromino}
+    \label{fig:so_do_lop}
+\end{figure}
+
+\begin{itemize}
+    \item \textbf{\texttt{Block}} chứa ma trận hình dạng và hai hàm ảo. \texttt{rotate()} xoay 90° theo chiều kim đồng hồ, \texttt{undoRotate()} xoay 90° ngược chiều kim đồng hồ để hoàn tác. Hàm hủy được khai báo ảo, để khi xóa đối tượng qua con trỏ \texttt{Block*}, hàm hủy của lớp con cũng được gọi.
+    \item \textbf{J, L, S, T, Z} chỉ khởi tạo hình dạng ban đầu và dùng lại cách xoay của lớp cha.
+    \item \textbf{\texttt{IBlock}} ghi đè hàm xoay. Khối I dài 4 ô, nếu xoay theo công thức chung thì tâm xoay bị lệch và khối bị trượt qua lại. Vì vậy lớp này dùng một biến cờ để chuyển giữa hai trạng thái cố định là nằm ngang và thẳng đứng. Hoàn tác xoay cũng chính là xoay thêm một lần.
+    \item \textbf{\texttt{OBlock}} ghi đè hàm xoay thành hàm rỗng, vì khối vuông trông giống nhau ở mọi góc xoay.
+\end{itemize}
+
+Nhờ đa hình, vòng lặp trò chơi và các thuật toán chỉ làm việc với con trỏ \texttt{Block*}, không cần biết loại khối cụ thể. Muốn thêm loại khối mới, chỉ cần viết thêm một lớp con.
+
+\textbf{Quản lý bộ nhớ.} Khối được tạo bằng \texttt{new} theo chỉ số loại khối. Khi một khối đã được cố định vào bảng, đối tượng của nó được \texttt{delete} trước khi tạo khối tiếp theo. Đối tượng ở ô \textit{Next Block} cũng được giải phóng trước khi thay bằng khối mới. Khi ván chơi kết thúc, cả hai con trỏ đều được giải phóng và gán về \texttt{nullptr}, nên chơi lại nhiều ván liên tiếp cũng không bị rò rỉ bộ nhớ.
+
+\subsection{Thuật toán sinh khối 7-Bag Randomizer}
+\label{subsec:7bag}
+
+Nếu mỗi lần chọn ngẫu nhiên độc lập một trong 7 khối, người chơi có thể gặp một khối nhiều lần liền, hoặc chờ rất lâu mới có khối I. Thuật toán \textbf{7-Bag}, được dùng trong các bản Tetris hiện đại, giải quyết vấn đề này. Cả 7 loại khối được bỏ vào một ``túi'' và xáo trộn thứ tự, sau đó lấy lần lượt từng khối ra. Khi túi rỗng thì tạo túi mới (Hình~\ref{fig:7bag}).
+
+\begin{figure}[H]
+    \centering
+    \includegraphics[width=0.55\textwidth]{04_tai_lieu_ky_thuat/so_do/bag7.png}
+    \caption{Lưu đồ thuật toán sinh khối 7-Bag}
+    \label{fig:7bag}
+\end{figure}
+
+Túi được xáo bằng thuật toán \textbf{Fisher--Yates}: duyệt vị trí $i$ từ 6 về 1, chọn ngẫu nhiên $j \in [0, i]$ rồi đổi chỗ hai phần tử. Cách này cho mọi hoán vị trong $7! = 5040$ hoán vị có xác suất như nhau, và chỉ tốn $O(n)$ phép đổi chỗ. Chỉ số túi được khởi tạo bằng 7 (túi ``đã hết''), nên đầu mỗi ván túi luôn được xáo mới.
+
+Kết quả là trong mỗi túi, mỗi loại khối xuất hiện đúng một lần. Một khối lặp liên tiếp tối đa 2 lần (ở cuối túi này và đầu túi sau), và giữa hai lần xuất hiện của cùng một khối có nhiều nhất 12 khối khác.
 
 \subsection{Thuật toán kiểm tra va chạm (\texttt{canMove})}
 % [Gợi ý nội dung: Thuật toán duyệt qua ma trận 4x4 của khối hiện tại tại vị trí dự kiến (x + dx, y + dy), kiểm tra biên bàn cờ (xt < 1 || xt >= W-1 || yt >= H-1) và kiểm tra trùng lặp với các khối đã xếp trước đó]
@@ -16,8 +83,17 @@
 \textit{[Nội dung bổ sung sau: Phân tích xử lý cập nhật trạng thái bàn cờ]}
 
 \subsection{Thuật toán kiểm tra và xóa dòng đầy (\texttt{removeLine})}
-% [Gợi ý nội dung: Duyệt từng hàng từ dưới lên trên, nếu tất cả các ô trong hàng khác ' ' thì dồn tất cả các hàng phía trên xuống 1 bậc, tạo hiệu ứng xóa dòng và cộng điểm]
-\textit{[Nội dung bổ sung sau: Sơ đồ thuật toán xóa dòng và cập nhật ma trận]}
+
+Sau khi một khối được cố định, thuật toán duyệt các hàng của vùng chơi \textbf{từ dưới lên} (hàng $H-2$ về hàng 1). Một hàng là \textit{đầy} khi không còn ô trống nào. Khi gặp hàng đầy, thuật toán dồn mọi hàng phía trên xuống một bậc, làm trống hàng trên cùng, rồi vẽ lại và dừng 100\,ms để tạo hiệu ứng. Sau đó thuật toán \textbf{xét lại chính hàng đó}, vì hàng này vừa nhận nội dung của hàng trên và có thể cũng đầy. Bước này giúp xóa đúng khi nhiều hàng đầy nằm liền nhau (Hình~\ref{fig:xoa_dong}).
+
+\begin{figure}[H]
+    \centering
+    \includegraphics[width=0.85\textwidth]{04_tai_lieu_ky_thuat/so_do/xoa_dong.png}
+    \caption{Lưu đồ thuật toán kiểm tra và xóa dòng đầy}
+    \label{fig:xoa_dong}
+\end{figure}
+
+\textbf{Độ phức tạp.} Kiểm tra một hàng tốn $O(W)$, dồn hàng tốn $O(H \cdot W)$. Một khối chỉ phủ tối đa 4 hàng, nên mỗi lượt xóa tối đa 4 dòng và tổng chi phí là $O(H \cdot W)$. Chi phí này không đáng kể với bảng $20 \times 15$.
 
 \subsection{Thuật toán xoay khối gạch (Rotation Algorithm)}
 % [Gợi ý nội dung: Cơ chế chuyển đổi trạng thái giữa các góc xoay 0, 90, 180, 270 độ, kiểm tra tính hợp lệ sau khi xoay (Wall Kick nếu có)]

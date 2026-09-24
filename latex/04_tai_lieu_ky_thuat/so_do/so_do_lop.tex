@@ -1,0 +1,62 @@
+\documentclass[border=6pt]{standalone}
+\usepackage[utf8]{inputenc}
+\usepackage[T5]{fontenc}
+\usepackage{tikz}
+\usetikzlibrary{shapes.multipart, arrows.meta}
+
+\begin{document}
+\begin{tikzpicture}[
+    font=\small,
+    cls/.style={rectangle split, rectangle split parts=3, draw=blue!60!black, thick,
+                rectangle split part fill={blue!15, white, white},
+                text width=#1, align=left, inner sep=4pt},
+    cls/.default=5.6cm,
+    simple/.style={rectangle, draw=blue!60!black, thick, fill=blue!8,
+                   minimum width=1.55cm, minimum height=0.7cm},
+    inh/.style={-{Triangle[open, length=3mm, width=3mm]}, thick}
+]
+    \node[cls, anchor=north] (base) at (0, 0) {
+        \centering \textbf{\textit{Block}}
+        \nodepart{second}
+        + shape : char[4][4]
+        \nodepart{third}
+        + \textit{rotate()} : void\\
+        + \textit{undoRotate()} : void\\
+        + \textit{$\sim$Block()}
+    };
+
+    \node[cls=4.3cm, anchor=north] (I) at (-7.0, -3.6) {
+        \centering \textbf{IBlock}
+        \nodepart{second}
+        - isVertical : bool
+        \nodepart{third}
+        + rotate() : void\\
+        + undoRotate() : void
+    };
+    \node[cls=4.3cm, anchor=north] (O) at (7.0, -3.6) {
+        \centering \textbf{OBlock}
+        \nodepart{second}
+        \phantom{x}
+        \nodepart{third}
+        + rotate() : void (rỗng)\\
+        + undoRotate() : void (rỗng)
+    };
+
+    \node[simple, anchor=north] (J) at (-3.5, -3.6) {JBlock};
+    \node[simple, anchor=north] (L) at (-1.75, -3.6) {LBlock};
+    \node[simple, anchor=north] (S) at ( 0.0, -3.6) {SBlock};
+    \node[simple, anchor=north] (T) at ( 1.75, -3.6) {TBlock};
+    \node[simple, anchor=north] (Z) at ( 3.5, -3.6) {ZBlock};
+
+    \coordinate (bus) at (0, -2.9);
+    \draw[thick] (I.north) |- (bus) -| (O.north);
+    \foreach \n in {J, L, T, Z} \draw[thick] (\n.north) -- (\n.north |- bus);
+    \draw[thick] (S.north) -- (bus);
+    \draw[inh] (bus) -- (base.south);
+
+    \node[font=\footnotesize, text=black!70, align=center] at (0, -4.75)
+        {J, L, S, T, Z dùng cách xoay mặc định của \textit{Block}};
+    \node[font=\footnotesize, text=black!70, anchor=north west] at (-9.2, 0)
+        {\textit{In nghiêng}: lớp trừu tượng / hàm ảo};
+\end{tikzpicture}
+\end{document}

@@ -1,0 +1,31 @@
+\documentclass[border=6pt]{standalone}
+\usepackage[utf8]{inputenc}
+\usepackage[T5]{fontenc}
+\usepackage{tikz}
+\usetikzlibrary{shapes.geometric, arrows.meta, positioning}
+
+\begin{document}
+\begin{tikzpicture}[
+    font=\small,
+    startstop/.style={rectangle, rounded corners=8pt, draw=red!60!black, fill=red!8, thick,
+                      minimum width=2.8cm, minimum height=0.75cm, align=center},
+    process/.style={rectangle, draw=blue!60!black, fill=blue!6, thick,
+                    minimum height=0.75cm, align=center, text width=4.4cm},
+    decision/.style={diamond, aspect=2.3, draw=orange!70!black, fill=orange!10, thick,
+                     align=center, inner sep=0pt, text width=2.4cm},
+    arr/.style={-{Stealth[length=2.3mm]}, thick},
+    lbl/.style={font=\footnotesize}
+]
+    \node[startstop] (s)     at (0, 0)     {Cần khối kế tiếp};
+    \node[decision]  (empty) at (0, -1.6)  {Túi đã lấy\\ hết 7 khối?};
+    \node[process]   (fill)  at (5.6, -1.6) {Nạp lại túi $\{0, 1, \dots, 6\}$;\\ xáo trộn Fisher--Yates;\\ chỉ số túi $\gets 0$};
+    \node[process]   (take)  at (0, -3.4)  {Lấy khối tại chỉ số túi,\\ tăng chỉ số thêm 1};
+    \node[startstop] (e)     at (0, -4.7)  {Trả về loại khối};
+
+    \draw[arr] (s) -- (empty);
+    \draw[arr] (empty) -- node[lbl, above]{Có} (fill);
+    \draw[arr] (fill) |- (take);
+    \draw[arr] (empty) -- node[lbl, right]{Không} (take);
+    \draw[arr] (take) -- (e);
+\end{tikzpicture}
+\end{document}
