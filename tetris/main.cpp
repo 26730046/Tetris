@@ -340,86 +340,120 @@ int main()
     cursorInfo.bVisible = FALSE;
     SetConsoleCursorInfo(GetStdHandle(STD_OUTPUT_HANDLE), &cursorInfo);
 
-    srand(time(0));
-    x = 5; y = 1; b = getNextBlockType();
-    loadCurrent();
-    next_b = getNextBlockType();
-    loadNext();
-    initBoard();
+    // Start menu
+    system("cls");
+    cout << "\n\n\n\n\n\t\tTETRIS GAME\n";
+    cout << "\tNhan phim bat ky de bat dau...\n";
+    getch();
 
-    int timer = 0;
-    system("cls"); // Clear screen once at the beginning
-    while (1){
-        boardDelBlock();
-        boardDelGhost();
+    while (true) {
+        // Reset state
+        score = 0;
+        level = 1;
+        totalLines = 0;
+        dropSpeed = 500;
+        bag_index = 7;
         
-        // Handle input smoothly
-        while (kbhit()){
-            char c = getch();
-            if (c == 'a' && canMove(-1,0)) x--;
-            else if (c == 'd' && canMove( 1,0)) x++;
-            else if (c == 'x' && canMove( 0,1)) y++;
-            else if (c == 'w') rotate(); // Xử lý phím w gọi thử xoay (Wall Kicks)
-            else if (c == ' ') {
-                while (canMove(0, 1)) y++;
-                timer = dropSpeed;
-            }
-            else if (c == 'p' || c == 'P' || c == 27) {
-                system("cls");
-                cout << "\n\n\n\n\n\n\t\t   ==== PAUSED ====\n";
-                cout << "\t\tNhan phim bat ky de tiep tuc...";
-                while(!kbhit()) Sleep(100);
-                getch(); // clear the pressed key
-                system("cls");
-            }
-            else if (c == 'q') return 0;
-        }
+        srand(time(0));
+        x = 5; y = 1; b = getNextBlockType();
+        loadCurrent();
+        next_b = getNextBlockType();
+        loadNext();
+        initBoard();
+
+        int timer = 0;
+        system("cls"); // Clear screen once at the beginning
         
-        timer += 30; // 30ms per frame
-        if (timer >= dropSpeed) {
-            if (canMove(0,1)) {
-                y++;
-            } else {
-                block2Board();
-                removeLine();
-                x = 5; y = 1; 
-                b = next_b;
-                
-                // Giải phóng bộ nhớ khối cũ trước khi cấp phát khối mới (Người 1)
-                if (currentBlock != nullptr) {
-                    delete currentBlock;
-                    currentBlock = nullptr;
+        bool quitGame = false;
+        while (1){
+            boardDelBlock();
+            boardDelGhost();
+            
+            // Handle input smoothly
+            while (kbhit()){
+                char c = getch();
+                if (c == 'a' && canMove(-1,0)) x--;
+                else if (c == 'd' && canMove( 1,0)) x++;
+                else if (c == 'x' && canMove( 0,1)) y++;
+                else if (c == 'w') rotate(); // Xử lý phím w gọi thử xoay (Wall Kicks)
+                else if (c == ' ') {
+                    while (canMove(0, 1)) y++;
+                    timer = dropSpeed;
                 }
-                
-                loadCurrent();
-                next_b = getNextBlockType();
-                loadNext();
-                if (!canPlace(currentBlock, x, y)) {
+                else if (c == 'p' || c == 'P' || c == 27) {
                     system("cls");
-                    cout << "\n\n\tGAME OVER!\n\tDiem so: " << score << "\n\n";
+                    cout << "\n\n\n\n\n\n\t\t   ==== PAUSED ====\n";
+                    cout << "\t\tNhan phim bat ky de tiep tuc...";
+                    while(!kbhit()) Sleep(100);
+                    getch(); // clear the pressed key
+                    system("cls");
+                }
+                else if (c == 'q') {
+                    quitGame = true;
                     break;
                 }
             }
-            timer = 0;
+            if (quitGame) break;
+            
+            timer += 30; // 30ms per frame
+            if (timer >= dropSpeed) {
+                if (canMove(0,1)) {
+                    y++;
+                } else {
+                    block2Board();
+                    removeLine();
+                    x = 5; y = 1; 
+                    b = next_b;
+                    
+                    // Giải phóng bộ nhớ khối cũ trước khi cấp phát khối mới (Người 1)
+                    if (currentBlock != nullptr) {
+                        delete currentBlock;
+                        currentBlock = nullptr;
+                    }
+                    
+                    loadCurrent();
+                    next_b = getNextBlockType();
+                    loadNext();
+                    if (!canPlace(currentBlock, x, y)) {
+                        break; // Game Over
+                    }
+                }
+                timer = 0;
+            }
+
+            int gy = y;
+            while (canPlace(currentBlock, x, gy + 1)) gy++;
+            for (int i = 0; i < 4; i++ )
+                for (int j = 0; j < 4; j++ )
+                    if (currentBlock->shape[i][j] != ' ' && board[gy+i][x+j] == ' ')
+                        board[gy+i][x+j] = '.';
+
+            block2Board();
+            draw();
+            Sleep(30);
+        }
+        
+        if (currentBlock != nullptr) {
+            delete currentBlock;
+            currentBlock = nullptr;
+        }
+        if (nextBlock != nullptr) {
+            delete nextBlock;
+            nextBlock = nullptr;
         }
 
-        int gy = y;
-        while (canPlace(currentBlock, x, gy + 1)) gy++;
-        for (int i = 0; i < 4; i++ )
-            for (int j = 0; j < 4; j++ )
-                if (currentBlock->shape[i][j] != ' ' && board[gy+i][x+j] == ' ')
-                    board[gy+i][x+j] = '.';
+        if (quitGame) break;
 
-        block2Board();
-        draw();
-        Sleep(30);
+        system("cls");
+        cout << "\n\n\tGAME OVER!\n\tDiem so: " << score << "\n\n";
+        cout << "\tNhan 'R' de choi lai, 'Q' de thoat.\n";
+        char choice;
+        while (true) {
+            choice = getch();
+            if (choice == 'r' || choice == 'R' || choice == 'q' || choice == 'Q') break;
+        }
+        if (choice == 'q' || choice == 'Q') break;
     }
-    
-    if (currentBlock != nullptr) {
-        delete currentBlock;
-    }
-    if (nextBlock != nullptr) {
-        delete nextBlock;
-    }
+
     return 0;
 }
