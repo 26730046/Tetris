@@ -58,3 +58,13 @@ Tính đến ngày 24/09, nhánh \texttt{master} có 70 commit, trong đó 41 co
 \end{table}
 
 Số commit chênh lệch khá lớn, nhưng không phản ánh trọn vẹn khối lượng đóng góp: phần lớn nội dung báo cáo được soạn song song trên Overleaf rồi mới đưa về GitHub theo từng đợt, nên một commit có thể tương ứng với nhiều giờ làm việc. Dù vậy, nhóm vẫn xem đây là chỉ dấu cho thấy công việc đang dồn về phía nhóm trưởng.
+
+Bên cạnh đó, trong suốt quá trình tích hợp mã nguồn thông qua Pull Request, nhóm ghi nhận \textbf{5 lần xảy ra xung đột (Merge Conflict)} cần xử lý thủ công. Cụ thể:
+\begin{itemize}
+    \item \textbf{PR \#28} (Nhánh \texttt{26730046\_slides}): Xung đột file \texttt{tieu\_chi\_danh\_gia.tex}, do \textbf{26730046} resolve.
+    \item \textbf{PR \#14} (Nhánh \texttt{26730002\_removeLine}): Xung đột file \texttt{tetris/main.cpp}, do \textbf{26730046} resolve.
+    \item \textbf{PR \#13} (Nhánh \texttt{26730057\_tang-do-kho}): Xung đột file \texttt{tetris/main.cpp}, do \textbf{26730057} resolve.
+    \item \textbf{PR \#7} (Nhánh \texttt{26730050\_giao\_dien...}): Xung đột file \texttt{tong\_quan\_tro\_choi.tex}, do \textbf{26730050} resolve.
+    \item \textbf{PR \#5} (Nhánh \texttt{26730046\_02\_cac\_...}): Xung đột file \texttt{tong\_quan\_tro\_choi.tex}, do \textbf{26730046} resolve.
+\end{itemize}
+Việc chủ động xử lý xung đột cục bộ (bằng cách merge ngược \texttt{master} vào nhánh cá nhân trước khi đẩy PR) đã giúp nhóm duy trì sự ổn định của nhánh chính và rèn luyện kỹ năng làm việc nhóm thực tế.
