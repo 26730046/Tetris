@@ -63,53 +63,126 @@
 % 1. CÁC CLASS, MODULE
 % ---------------------------------------------
 \begin{frame}{1. Cấu trúc Game: Các Module và Class chính}
-    \textbf{Ứng dụng console một luồng, sử dụng OOP (C++) chia thành các module:}
-    \begin{itemize}
-        \item \textbf{Module Vòng lặp \& Điều phối (Game Loop):} Quản lý phiên chơi, kiểm soát tốc độ khung hình (30ms/frame).
-        \item \textbf{Module Xử lý đầu vào (Input):} Đọc phím không chặn (\texttt{conio.h}).
-        \item \textbf{Module Mô hình \& Logic khối (Tetromino):} Các class kế thừa xử lý 7 loại khối, kiểm tra va chạm và xoay.
-        \item \textbf{Module Bảng chơi (Board):} Quản lý ma trận lưới, xử lý xóa dòng và tính điểm.
-        \item \textbf{Module Hiển thị (Render):} Vẽ lưới và mã màu ANSI (\texttt{windows.h}), vẽ đè không xóa màn hình.
-    \end{itemize}
-    \vspace{0.2cm}
-    \begin{center}
-        \includegraphics[height=4cm]{04_tai_lieu_ky_thuat/so_do/kien_truc_tong_quan.png}
-    \end{center}
+    \textbf{Ứng dụng console một luồng, OOP (C++) chia thành các module:}
+    \begin{columns}[T]
+        \begin{column}{0.55\textwidth}
+            \begin{itemize}\small
+                \item \textbf{Game Loop:} Quản lý phiên chơi, 30\,ms/frame.
+                \item \textbf{Input:} Đọc phím không chặn (\texttt{conio.h}).
+                \item \textbf{Tetromino:} Lớp cơ sở \texttt{Block} + 7 lớp con:\\
+                      {\footnotesize\texttt{IBlock, OBlock, TBlock, SBlock,}\\
+                      \texttt{ZBlock, JBlock, LBlock}} — kế thừa, va chạm, xoay.
+                \item \textbf{Board:} Ma trận lưới $20{\times}15$, xóa dòng, tính điểm.
+                \item \textbf{Render:} Màu ANSI (\texttt{windows.h}), vẽ đè không xóa.
+            \end{itemize}
+        \end{column}
+        \begin{column}{0.43\textwidth}
+            \includegraphics[width=\textwidth]{04_tai_lieu_ky_thuat/so_do/kien_truc_tong_quan.png}
+        \end{column}
+    \end{columns}
 \end{frame}
 
 % ---------------------------------------------
-% 2. PHÂN CÔNG SV CODE PHẦN NÀO
+% SƠ ĐỒ LỚP (Class Diagram)
 % ---------------------------------------------
-\begin{frame}{2. Phân công Lập trình (Ai code phần nào)}
+\begin{frame}{Sơ đồ Lớp (Class Diagram)}
+    \begin{center}
+        \includegraphics[width=0.97\textwidth,height=0.72\textheight,keepaspectratio]{04_tai_lieu_ky_thuat/so_do/so_do_lop.png}
+    \end{center}
+    {\footnotesize
+        \textbf{Block} (lớp cơ sở): ma trận $4\times4$, hàm ảo \texttt{rotate()} / \texttt{undoRotate()}.\\
+        \textbf{IBlock}: ghi đè xoay bằng cờ ngang/dọc. \quad
+        \textbf{OBlock}: ghi đè xoay thành hàm rỗng. \quad
+        \textbf{J, L, S, T, Z}: dùng lại xoay của lớp cha.
+    }
+\end{frame}
+
+% ---------------------------------------------
+% 2. PHÂN CÔNG: SV NÀO CODE PHẦN NÀO
+% ---------------------------------------------
+\begin{frame}[shrink=5]{2. Phân công: Sinh viên nào Code phần nào}
     \begin{table}[]
         \centering
         \resizebox{\textwidth}{!}{%
-        \begin{tabular}{@{}llp{7cm}@{}}
+        \begin{tabular}{@{}cp{2.8cm}p{1.7cm}p{7.5cm}@{}}
         \toprule
-        \textbf{Thành viên} & \textbf{MSSV} & \textbf{Module / Class phụ trách code chính} \\ \midrule
-        Phạm Ngọc Hoàng Long & 26730046 & Code \textbf{Module Vòng lặp \& Điều phối}, cấu trúc file \texttt{main.cpp} \\
-        Huỳnh Thị Kim Anh & 26730002 & Code \textbf{Module Hiển thị}, xử lý UI và màu sắc ANSI \\
-        Hoàng Gia Huy & 26730026 & Code \textbf{Module Mô hình khối (Tetromino)}, xử lý đa hình OOP \\ 
-        Lê Thành Nam & 26730050 & Code logic \textbf{Va chạm, Xoay khối} và \textbf{Xử lý Input} \\
-        Phạm Mạnh Thiên Phúc & 26730057 & Code \textbf{Module Bảng chơi (Board)}, thuật toán tính điểm \& xóa dòng \\ \bottomrule
+        \textbf{STT} & \textbf{Họ và tên} & \textbf{MSSV} & \textbf{Phần Code chính được giao} \\ \midrule
+        1 & Phạm Ngọc Hoàng Long & 26730046 &
+            Lớp cơ sở \texttt{Block} + quản lý bộ nhớ (\texttt{new}/\texttt{delete});
+            toàn bộ tính năng GĐ4: Hard Drop, Ghost Piece, Next Block Preview,
+            7-Bag Randomizer, hệ thống điểm, tạm dừng, màn hình Game Over, màu ANSI. \\[3pt]
+        2 & Huỳnh Thị Kim Anh & 26730002 &
+            Hàm \texttt{removeLine()} (xóa dòng đầy + dồn hàng);
+            cơ chế thử xoay kèm \textit{wall kicks} (dịch $\pm1$, $\pm2$ ô). \\[3pt]
+        3 & Hoàng Gia Huy & 26730026 &
+            7 lớp con kế thừa \texttt{Block} (\texttt{IBlock}, \texttt{OBlock}, \texttt{TBlock}, \texttt{SBlock},
+            \texttt{ZBlock}, \texttt{JBlock}, \texttt{LBlock}) + hàm khởi tạo Factory. \\[3pt]
+        4 & Lê Thành Nam & 26730050 &
+            Thuật toán xoay ma trận $4\times4$ (\texttt{rotateMatrix});
+            refactor hàm \texttt{canPlace()}, \texttt{block2Board()}, \texttt{boardDelBlock()} sang dùng đối tượng \texttt{Block}. \\[3pt]
+        5 & Phạm Mạnh Thiên Phúc & 26730057 &
+            Hàm \texttt{rotate()} mặc định + ghi đè cho \texttt{IBlock}/\texttt{OBlock};
+            logic tăng độ khó theo số dòng đã xóa. \\ \bottomrule
         \end{tabular}%
         }
     \end{table}
-    \textit{*Ghi chú: Vui lòng sửa lại cột cuối cho khớp chính xác với thực tế của nhóm.}
 \end{frame}
 
 % ---------------------------------------------
-% 3. CHỨNG MINH GIT - PHẦN 1: PULL REQUEST
+% PHÂN CÔNG CÔNG VIỆC - BIỂU ĐỒ THEO TUẦN
 % ---------------------------------------------
-\begin{frame}{3. Triển khai phân công trên Git: Pull Request}
-    \textbf{Minh chứng quy trình làm việc nhóm qua Pull Request trên Git:}
-    \begin{itemize}
-        \item Mỗi thành viên làm việc trên \textbf{nhánh riêng}, sau đó tạo \textbf{Pull Request} để gộp code vào nhánh chính.
-        \item Pull Request giúp cả nhóm \textbf{review code} trước khi merge, tránh lỗi và xung đột.
-    \end{itemize}
-    \vspace{0.2cm}
+\begin{frame}{Biểu đồ Phân công Công việc theo Tuần (Trello)}
+    \begin{columns}[T]
+        \begin{column}{0.60\textwidth}
+            \includegraphics[width=\textwidth,height=0.72\textheight,keepaspectratio]{assest/phan_cong_cong_viec.jpg}
+        \end{column}
+        \begin{column}{0.38\textwidth}
+            \includegraphics[width=\textwidth,height=0.72\textheight,keepaspectratio]{assest/trello.png}
+            {\footnotesize \textbf{Trello Board:} Nhóm dùng Trello để theo dõi tiến độ từng nhiệm vụ theo 4 giai đoạn (To-Do / In Progress / Done).}
+        \end{column}
+    \end{columns}
+\end{frame}
+
+% ---------------------------------------------
+% MINH CHỨNG SLACK - GIAO TIẾP NHÓM
+% ---------------------------------------------
+\begin{frame}{Minh chứng Giao tiếp Nhóm qua Slack}
     \begin{center}
-        \includegraphics[height=4.5cm]{assest/pull request.png}
+        \includegraphics[width=0.97\textwidth,height=0.68\textheight,keepaspectratio]{assest/slack.png}
+    \end{center}
+    {\footnotesize \textbf{Slack:} Kênh nhóm dùng để thảo luận kỹ thuật, thông báo khi merge xong nhánh, báo cáo tiến độ và phân công công việc hàng ngày.}
+\end{frame}
+
+% ---------------------------------------------
+% 3. CHỨNG MINH GIT - PHẦN 1: PULL REQUEST (Tổng quan & Minh chứng)
+% ---------------------------------------------
+\begin{frame}[shrink=5]{3. Quy trình Git: Pull Request từ nhánh riêng}
+    {\footnotesize \textbf{Quy tắc:} Mỗi thành viên làm trên \textbf{nhánh riêng} (\texttt{MSSV\_ten\_cong\_viec}), tạo \textbf{Pull Request} vào \texttt{master}, nhóm trưởng review \& merge.}
+
+    \textbf{PR tiêu biểu theo thành viên:}
+    \begin{table}[]
+        \centering
+        \resizebox{\textwidth}{!}{%
+        \begin{tabular}{@{}llp{5.5cm}c@{}}
+        \toprule
+        \textbf{Thành viên} & \textbf{MSSV} & \textbf{PR tiêu biểu (nhánh)} & \textbf{PR\#} \\ \midrule
+        Phạm Ngọc Hoàng Long & 26730046 & \texttt{logic\_xoay}, \texttt{xu\_ly\_wall\_kicks}, \texttt{nang\_cap\_tinh\_nang} & \#19, \#21, \#23 \\
+        Huỳnh Thị Kim Anh    & 26730002 & \texttt{26730002\_removeLine}, \texttt{26730002\_tieuchidanhgia}           & \#14, \#26 \\
+        Hoàng Gia Huy        & 26730026 & \texttt{gioi-thieu-tetrominoes}, \texttt{tai\_lieu\_ky\_thuat}            & \#1, \#25 \\
+        Lê Thành Nam         & 26730050 & \texttt{thuat\_toan\_xoay}, \texttt{qua\_trinh\_lam\_viec}               & \#15, \#27 \\
+        Phạm Mạnh Thiên Phúc & 26730057 & \texttt{tang-do-kho} (×2 lần, có resolve conflict)                       & \#12, \#13 \\ \bottomrule
+        \end{tabular}%
+        }
+    \end{table}
+    {\footnotesize \textit{Tổng cộng: \textbf{28 Pull Request} — 27 đã merge vào \texttt{master}.}}
+\end{frame}
+
+% ---------------------------------------------
+% MINH CHỨNG GITHUB - DANH SÁCH PR (ảnh chụp)
+% ---------------------------------------------
+\begin{frame}{Minh chứng GitHub: Danh sách Pull Request}
+    \begin{center}
+        \includegraphics[width=0.97\textwidth,height=0.72\textheight,keepaspectratio]{assest/github_pr_list.jpg}
     \end{center}
 \end{frame}
 
@@ -127,9 +200,31 @@
             \end{itemize}
         \end{column}
         \begin{column}{0.56\textwidth}
-            \includegraphics[width=\textwidth]{assest/git_conflict.jpg}
+            \includegraphics[width=\textwidth,height=0.65\textheight,keepaspectratio]{assest/git_conflict.jpg}
         \end{column}
     \end{columns}
+\end{frame}
+
+% ---------------------------------------------
+% 5. THỐNG KÊ XỬ LÝ CONFLICT
+% ---------------------------------------------
+\begin{frame}{5. Thống kê Xử lý Conflict (Merge PR)}
+    {\small \textbf{Ghi nhận 5 lần xử lý conflict thành công khi merge vào \texttt{master}:}}
+    \begin{table}[]
+        \centering
+        \resizebox{0.97\textwidth}{!}{%
+        \begin{tabular}{@{}ccllc@{}}
+        \toprule
+        \textbf{PR} & \textbf{Nhánh nguồn (gây conflict)} & \textbf{File bị xung đột} & \textbf{Người Resolve} & \textbf{Ngày} \\ \midrule
+        \#28 & \texttt{26730046\_slides} & \texttt{.../tieu\_chi\_danh\_gia.tex} & \textbf{26730046} & 25/09 \\
+        \#14 & \texttt{26730002\_removeLine} & \texttt{tetris/main.cpp} & \textbf{26730046} & 23/09 \\
+        \#13 & \texttt{26730057\_tang-do-kho} & \texttt{tetris/main.cpp} & \textbf{26730057} & 22/09 \\
+        \#7 & \texttt{26730050\_giao\_dien...} & \texttt{.../tong\_quan\_tro\_choi.tex} & \textbf{26730050} & 17/09 \\
+        \#5 & \texttt{26730046\_02\_cac\_...} & \texttt{.../tong\_quan\_tro\_choi.tex} & \textbf{26730046} & 17/09 \\ \bottomrule
+        \end{tabular}%
+        }
+    \end{table}
+    {\footnotesize \textbf{Đánh giá:} Các thành viên chủ động giao tiếp và dùng kỹ năng \textit{resolve conflict} thủ công, đảm bảo \texttt{master} luôn ổn định.}
 \end{frame}
 
 % ---------------------------------------------
@@ -137,9 +232,9 @@
 % ---------------------------------------------
 \begin{frame}
     \centering
-    \Huge \textbf{Cảm ơn Thầy/Cô đã lắng nghe!}\\
+    \Huge \textbf{Cảm ơn Thầy đã lắng nghe!}\\
     \vspace{1cm}
-    \Large Nhóm rất mong nhận được câu hỏi từ Thầy/Cô.
+    \Large Nhóm rất mong nhận được câu hỏi từ Thầy.
 \end{frame}
 
 \end{document}
