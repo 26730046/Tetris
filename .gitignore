@@ -46,3 +46,6 @@ example/*
 *.pdf
 *.synctex(busy)
 require.md
+*.nav
+*.snm
+trello_cards.txt

@@ -1,9 +1,19 @@
-\section{Kỹ năng quản trị và Tổ chức công việc}
+\section{Kỹ năng quản lý}
 
-\subsection{Kỹ năng quản lý thời gian và Tuân thủ hạn chót (Time Management)}
-% [Gợi ý nội dung: Lập kế hoạch theo tuần, ước lượng thời gian hoàn thành task (estimation), phân bổ thời gian hợp lý giữa các môn học]
-\textit{[Nội dung bổ sung sau: Phương pháp quản lý thời gian nhóm áp dụng]}
+Khả năng quản lý mã nguồn và quản lý tiến độ công việc là những kỹ năng thiết yếu để đảm bảo dự án phần mềm được hoàn thiện đúng thời hạn và dễ dàng bảo trì. Nhóm đã áp dụng các quy trình làm việc chuẩn công nghiệp thông qua việc sử dụng Git/GitHub và Trello.
 
-\subsection{Kỹ năng áp dụng công cụ quản lý dự án (Trello/Kanban)}
-% [Gợi ý nội dung: Ứng dụng quy trình Agile/Kanban trong việc quản lý khối lượng công việc và đánh giá hiệu suất]
-\textit{[Nội dung bổ sung sau: Đánh giá hiệu quả khi sử dụng công cụ Trello]}
+\subsection{Quản lý mã nguồn với Git và GitHub}
+Việc cùng thao tác trên một dự án mã nguồn mở đòi hỏi nhóm phải có quy trình đồng bộ chặt chẽ.
+\begin{itemize}
+    \item \textbf{Mô hình phân nhánh (Branching Strategy):} Thay vì làm việc trực tiếp trên nhánh \texttt{master}, nhóm áp dụng nguyên tắc tạo các nhánh riêng (feature branch) cho từng tính năng hoặc bản vá lỗi cụ thể. Dựa vào lịch sử commit, có thể thấy rõ các nhánh rẽ như: \texttt{26730046\_xu\_ly\_wall\_kicks}, \texttt{26730050\_thuat\_toan\_xoay\_nguoi}, \texttt{26730002\_removeLine}. Điều này giúp cách ly các rủi ro, đảm bảo code đang thử nghiệm không làm ảnh hưởng đến mã nguồn chính.
+    \item \textbf{Quy trình Pull Request (PR) và Code Review:} Khi một tính năng được hoàn thiện trên nhánh phụ, thành viên sẽ tạo một Pull Request trên nền tảng GitHub. Quá trình này giúp các thành viên khác có cơ hội xem xét chéo (review code), góp ý chỉnh sửa trước khi tiến hành hợp nhất (merge) mã nguồn vào nhánh chính.
+    \item \textbf{Lịch sử Commit minh bạch:} Nhóm đã quy ước cách đặt tên commit rõ ràng, sử dụng các tiền tố chuẩn mực như \texttt{feat:} (tính năng mới), \texttt{update:} (cập nhật/sửa đổi tính năng hiện tại), \texttt{refactor:} (tái cấu trúc code). Nhờ vậy, lịch sử phát triển dự án trở nên dễ đọc, hỗ trợ rất tốt cho việc truy vết lỗi (debug) và khôi phục lại (revert) các phiên bản cũ khi cần thiết.
+\end{itemize}
+
+\subsection{Quản lý Task với Trello}
+Để kiểm soát lượng công việc lớn và đảm bảo không bỏ sót bất kỳ yêu cầu nào của đồ án, nhóm đã số hóa toàn bộ quá trình lập kế hoạch bằng bảng Kanban trên Trello.
+\begin{itemize}
+    \item \textbf{Tổ chức bảng Kanban khoa học:} Bảng Trello của nhóm được chia thành các danh sách (List) phản ánh đúng luồng sinh mệnh của một công việc: \textbf{To Do} (Cần làm) $\rightarrow$ \textbf{In Progress} (Đang làm) $\rightarrow$ \textbf{Review/Check} (Kiểm tra) $\rightarrow$ \textbf{Done} (Hoàn thành).
+    \item \textbf{Định nghĩa chi tiết công việc (Task Description):} Mỗi công việc (Card) đều được viết rõ yêu cầu đầu ra. Ví dụ, thẻ "Tài liệu kỹ thuật của trò chơi" chỉ định rõ độ dài yêu cầu, các nội dung cần soạn (Kiến trúc C++, Thuật toán 7-Bag Randomizer) và yêu cầu phải có biểu đồ minh họa.
+    \item \textbf{Phân công và theo dõi tiến độ (Assigning \& Tracking):} Các tính năng trong Trello như chỉ định thành viên (Assignees) và nhãn (Labels) đã được sử dụng hiệu quả. Nhãn màu được quy ước để phân loại độ ưu tiên (Priority), loại công việc (Coding, Report, GitHub), và cảnh báo tắc nghẽn (Halp, Blocked). Bằng cách kéo thả các thẻ (Card) qua lại giữa các cột, mọi thành viên trong nhóm đều có thể theo dõi được tiến độ tổng thể của toàn dự án (Burndown) theo thời gian thực.
+\end{itemize}

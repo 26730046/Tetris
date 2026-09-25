@@ -1,13 +1,33 @@
-\section{Kỹ năng chuyên môn (Hard Skills)}
+\section{Kỹ năng chuyên môn}
 
-\subsection{Kỹ năng lập trình và Tư duy thuật toán}
-% [Gợi ý nội dung: Nâng cao kỹ năng lập trình C++, xử lý mảng đa chiều, thao tác con trỏ/mảng ký tự, xây dựng game loop và thuật toán xử lý ma trận]
-\textit{[Nội dung bổ sung sau: Tổng kết kỹ năng lập trình đạt được]}
+Để xây dựng hoàn chỉnh trò chơi Tetris và bộ tài liệu báo cáo kỹ thuật, nhóm đã vận dụng sâu sắc các kiến thức chuyên ngành và kỹ năng thực hành, đặc biệt là tư duy lập trình C++ và kỹ năng soạn thảo tài liệu chuyên nghiệp với \LaTeX.
 
-\subsection{Kỹ năng sử dụng Hệ thống quản lý phiên bản (Git/GitHub)}
-% [Gợi ý nội dung: Kỹ năng tạo branch, commit có ý nghĩa, resolve merge conflicts, tạo Pull Request và review code của thành viên]
-\textit{[Nội dung bổ sung sau: Quy trình Git Workflow áp dụng trong nhóm]}
+\subsection{Kỹ năng lập trình C++}
+Dự án yêu cầu không chỉ là việc viết các đoạn mã chạy được, mà còn phải xây dựng một kiến trúc phần mềm rõ ràng, dễ mở rộng và tối ưu hiệu suất.
+\begin{itemize}
+    \item \textbf{Lập trình Hướng đối tượng (OOP):} Đây là nền tảng cốt lõi của dự án. Nhóm đã áp dụng triệt để các tính chất của OOP:
+    \begin{itemize}
+        \item \textit{Kế thừa (Inheritance) và Đa hình (Polymorphism):} Nhóm đã thiết kế một lớp cơ sở (\texttt{Base Class}) tổng quát cho các khối gạch, sau đó tạo các lớp dẫn xuất (\texttt{Subclass}) đại diện cho từng hình dạng khối cụ thể (Khối I, J, L, O, S, T, Z).
+        \item \textit{Đóng gói (Encapsulation):} Các thuộc tính trạng thái của trò chơi (như điểm số, cấp độ, mảng hai chiều biểu diễn bàn chơi) được ẩn giấu (private) và chỉ được thao tác thông qua các phương thức giao tiếp (public methods) an toàn.
+    \end{itemize}
+    \item \textbf{Cấu trúc dữ liệu và Thuật toán:}
+    \begin{itemize}
+        \item Sử dụng mảng đa chiều (Matrix) để biểu diễn logic bảng game (Board) và trạng thái xoay của các khối gạch.
+        \item Áp dụng thuật toán \textbf{7-Bag Randomizer} để tạo ra tính ngẫu nhiên công bằng, giúp các khối xuất hiện một cách cân bằng, tránh tình trạng một loại khối xuất hiện quá nhiều hoặc quá ít.
+        \item Triển khai các thuật toán thao tác ma trận phức tạp: thuật toán xoay khối (quay ma trận), kiểm tra va chạm tại các biên và với các khối đã đặt trước đó, cũng như thuật toán \textbf{Wall Kicks} (điều chỉnh tọa độ khi khối bị kẹt sát tường trong lúc xoay).
+        \item Viết thuật toán quét và xóa dòng (Remove line) hiệu quả, kết hợp logic dồn các hàng phía trên xuống.
+    \end{itemize}
+    \item \textbf{Xử lý tương tác Console:} Nhóm đã nghiên cứu và triển khai các hàm tương tác sâu với Console của Windows như: ẩn con trỏ chuột nháy, nhận tín hiệu phím bất đồng bộ (non-blocking input), và kỹ thuật vẽ lại bộ đệm (buffer) để giảm thiểu hiện tượng nhấp nháy (flickering) màn hình, mang lại trải nghiệm mượt mà cho người chơi.
+\end{itemize}
 
-\subsection{Kỹ năng soạn thảo văn bản kỹ thuật với \LaTeX}
-% [Gợi ý nội dung: Cấu trúc hóa tài liệu lớn, quản lý bảng biểu, hình ảnh, mã nguồn và trích dẫn tài liệu tham khảo chuẩn chỉnh]
-\textit{[Nội dung bổ sung sau: Ứng dụng LaTeX và Overleaf trong soạn thảo báo cáo]}
+\subsection{Kỹ năng sử dụng \LaTeX}
+Báo cáo kỹ thuật của đồ án đòi hỏi sự chuyên nghiệp về mặt trình bày và cấu trúc, do đó nhóm đã quyết định sử dụng \LaTeX\ thay cho các công cụ soạn thảo văn bản thông thường.
+\begin{itemize}
+    \item \textbf{Cấu trúc tài liệu đa tệp (Modular Document):} Thay vì viết toàn bộ nội dung vào một tệp khổng lồ, nhóm đã biết cách sử dụng lệnh \texttt{\textbackslash input\{\}} và \texttt{\textbackslash include\{\}} để chia nhỏ đồ án thành các thư mục và tệp con theo từng chương, mục (như \texttt{04\_tai\_lieu\_ky\_thuat}, \texttt{05\_qua\_trinh\_lam\_viec\_nhom}...). Kỹ năng này giúp việc phối hợp viết báo cáo nhóm không bị xung đột.
+    \item \textbf{Định dạng nâng cao:} Nhóm đã thành thạo trong việc khai báo và sử dụng các gói (packages) bổ trợ để:
+    \begin{itemize}
+        \item Trình bày các đoạn mã nguồn C++ (sử dụng gói \texttt{listings} hoặc \texttt{minted}) với màu sắc cú pháp rõ ràng.
+        \item Chèn và định dạng kích thước, vị trí các hình ảnh minh họa, lưu đồ thuật toán (flowchart) và biểu đồ lớp (class diagram).
+        \item Tạo các bảng biểu phức tạp và quản lý hệ thống tham chiếu chéo (cross-references), mục lục tự động một cách chính xác.
+    \end{itemize}
+\end{itemize}
