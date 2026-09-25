@@ -1,25 +1,51 @@
-\section{Kết quả tự đánh giá và Đánh giá chéo thành viên}
+\section{Kết quả đánh giá thành viên}
 
-Dưới đây là bảng tổng hợp mức độ hoàn thành nhiệm vụ và tỷ lệ phần trăm (\%) đóng góp của từng thành viên trong suốt quá trình thực hiện đồ án:
+Dựa trên các tiêu chí đã đề ra, dữ liệu hoạt động thực tế trên GitHub (Commit, Pull Request, nhánh code) và đặc biệt là lịch sử phân công, hỗ trợ được ghi nhận trên bảng Trello, nhóm đã tiến hành đánh giá chéo và thống nhất kết quả như sau.
+
+Một điểm đáng chú ý trong quá trình thực hiện là nhóm trưởng \textbf{Phạm Ngọc Hoàng Long (26730046)} đã liên tục phải tự assign thêm bản thân vào các task được giao cho thành viên khác khi các task đó gặp khó khăn kỹ thuật, cụ thể là các tác vụ: \textit{Xử lý Wall Kicks} (hỗ trợ 26730002), \textit{Cài đặt logic Xoay đa hình -- Polymorphism} (hỗ trợ 26730057), \textit{Triển khai Subclass} (hỗ trợ 26730026) và \textit{Refactor Board Interaction} (hỗ trợ 26730050). Thực tế này được phản ánh trung thực trong bảng đánh giá dưới đây.
 
 \begin{table}[H]
     \centering
-    \caption{Bảng đánh giá mức độ hoàn thành và tỷ lệ đóng góp của thành viên}
-    \label{tab:danh_gia_dong_gop}
-    \renewcommand{\arraystretch}{1.6}
-    \begin{tabularx}{\textwidth}{|c|p{4cm}|c|c|X|}
+    \renewcommand{\arraystretch}{1.5}
+    \begin{tabular}{|p{3.8cm}|p{7.5cm}|c|}
         \hline
-        \textbf{STT} & \textbf{Họ và tên} & \textbf{MSSV} & \textbf{\% Đóng góp} & \textbf{Nhận xét / Đánh giá chung} \\
+        \textbf{Họ và Tên (MSSV)} & \textbf{Nhiệm vụ thực tế đảm nhận} & \textbf{Hoàn thành} \\
         \hline
-        1 & Phạm Ngọc Hoàng Long & 26730046 & \dots\% & \textit{[Nhóm trưởng - Nhận xét đánh giá]} \\
+        \textbf{Phạm Ngọc Hoàng Long} \newline (26730046) &
+        - Khởi tạo toàn bộ cấu trúc dự án, thiết lập Workspace (GitHub, Slack, Overleaf, Trello).\newline
+        - Xây dựng nền tảng (Base Class) \& quản lý bộ nhớ.\newline
+        - Triển khai 7-Bag Randomizer, Wall Kicks, Refactor Board Interaction.\newline
+        - \textit{Hỗ trợ} hoàn thiện cả 4 task khó của các thành viên khác (Subclass/26730026, Polymorphism/26730057, Board Interaction/26730050, Wall Kicks/26730002).\newline
+        - Review, Merge toàn bộ Pull Requests; biên tập master file \LaTeX; tổng hợp báo cáo và slide. &
+        \textbf{100\%} \\
         \hline
-        2 & Huỳnh Thị Kim Anh & 26730002 & \dots\% & \textit{[Nhận xét đánh giá]} \\
+        \textbf{Hoàng Gia Huy} \newline (26730026) &
+        - Triển khai Subclass (định hình các khối Tetromino) -- cần nhóm trưởng hỗ trợ hoàn thiện.\newline
+        - Khắc phục lỗi giao diện hiển thị bảng và khối gạch (Fix UI/Console).\newline
+        - Soạn tài liệu kỹ thuật (kiến trúc hệ thống, cài đặt \& triển khai). &
+        \textbf{80\%} \\
         \hline
-        3 & Hoàng Gia Huy & 26730026 & \dots\% & \textit{[Nhận xét đánh giá]} \\
+        \textbf{Nam Lê} \newline (26730050) &
+        - Nghiên cứu và phát triển thuật toán xoay khối người dùng.\newline
+        - Phụ trách Refactor tương tác với Bảng Game (Board Interaction) -- cần nhóm trưởng hỗ trợ hoàn thiện.\newline
+        - Soạn báo cáo quá trình làm việc nhóm (nhật ký, kế hoạch, khó khăn). &
+        \textbf{80\%} \\
         \hline
-        4 & Lê Thành Nam & 26730050 & \dots\% & \textit{[Nhận xét đánh giá]} \\
+        \textbf{Phạm Mạnh Thiện Phúc} \newline (26730057) &
+        - Triển khai logic tăng độ khó (Level \& Speed).\newline
+        - Cài đặt logic Xoay đa hình (Polymorphism) -- cần nhóm trưởng hỗ trợ hoàn thiện.\newline
+        - Soạn nội dung phần kỹ năng áp dụng của nhóm. &
+        \textbf{80\%} \\
         \hline
-        5 & Phạm Mạnh Thiên Phúc & 26730057 & \dots\% & \textit{[Nhận xét đánh giá]} \\
+        \textbf{Nguyễn Văn An} \newline (26730002) &
+        - Triển khai thuật toán quét và xóa dòng (\texttt{removeLine}).\newline
+        - Phụ trách task Xử lý Wall Kicks -- cần nhóm trưởng hỗ trợ hoàn thiện.\newline
+        - Soạn tài liệu đánh giá hợp đồng nhóm (tiêu chí, kết quả, tổng kết). &
+        \textbf{80\%} \\
         \hline
-    \end{tabularx}
+    \end{tabular}
+    \caption{Bảng đánh giá mức độ hoàn thành nhiệm vụ của các thành viên}
 \end{table}
+
+\textbf{Nhận xét chung:}
+Nhìn chung, tất cả các thành viên đều thể hiện tinh thần tham gia và nỗ lực hoàn thành phần việc được giao. Tuy nhiên, một số task kỹ thuật phức tạp (Wall Kicks, Polymorphism, Subclass) đòi hỏi sự can thiệp hỗ trợ từ nhóm trưởng để có thể hoàn thiện đúng tiến độ. Điều này cho thấy khoảng cách nhất định về trình độ kỹ thuật C++ giữa các thành viên, đồng thời cũng ghi nhận vai trò quan trọng và tích cực của nhóm trưởng trong việc đảm bảo dự án về đích đúng hạn.
