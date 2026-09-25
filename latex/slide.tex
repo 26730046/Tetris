@@ -7,27 +7,29 @@
 \usepackage{hyperref}
 
 % Cấu hình thông tin slide
-\title[Báo cáo Tetris]{Báo Cáo Quá Trình Làm Việc Nhóm\\Dự án Game Tetris (C++)}
-\author[Nhóm SS004]{
-    Phạm Ngọc Hoàng Long (26730046 - NT) \and 
-    Huỳnh Thị Kim Anh (26730002) \and \\
-    Hoàng Gia Huy (26730026) \and 
-    Lê Thành Nam (26730050) \and 
-    Phạm Mạnh Thiên Phúc (26730057)
-}
-\institute{
-    Môn: Kỹ năng nghề nghiệp (SS004) - GVHD: Nguyễn Văn Toàn\\
-    Trường Đại học Công nghệ Thông tin, ĐHQG TP.HCM
-}
-\date{Năm 2026}
-
 \begin{document}
 
 % ---------------------------------------------
-% BÌA
+% BÌA (Tùy chỉnh giống báo cáo)
 % ---------------------------------------------
-\begin{frame}
-    \titlepage
+\begin{frame}[plain] % Dùng [plain] để bỏ đi header/footer mặc định của Beamer ở trang bìa
+    \vspace{-0.5cm} % Cân chỉnh một chút cho vừa chiều cao của slide 16:9
+    \begin{center}
+        \textbf{\small ĐẠI HỌC QUỐC GIA TP. HỒ CHÍ MINH}\\
+        \textbf{\small TRƯỜNG ĐẠI HỌC CÔNG NGHỆ THÔNG TIN}\\[0.1cm]
+        
+        \includegraphics[height=1.2cm]{assest/Logo_uit.jpg}\\[0.2cm] % Chỉnh lại height cho phù hợp với slide
+        
+        \textbf{\large BÁO CÁO ĐỒ ÁN CUỐI KỲ}\\[0.1cm]
+        \textbf{\Large MÔN: KỸ NĂNG NGHỀ NGHIỆP}\\[0.1cm]
+        \textbf{\small MÃ LỚP: SS004.F31.CN1.CNTT}\\[0.1cm]
+        \textbf{\small NHÓM: 02}\\[0.2cm]
+        
+        \rule{0.8\textwidth}{1pt}\\[0.1cm]
+        \textbf{\Large ĐỀ TÀI: XÂY DỰNG VÀ PHÁT TRIỂN}\\[0.1cm]
+        \textbf{\Large TRÒ CHƠI TETRIS (XẾP GẠCH)}\\
+        \rule{0.8\textwidth}{1pt}
+    \end{center}
 \end{frame}
 
 % ---------------------------------------------
@@ -71,8 +73,7 @@
     \end{itemize}
     \vspace{0.2cm}
     \begin{center}
-        \textit{(Chèn ảnh \texttt{kien\_truc\_tong\_quan.png} từ thư mục báo cáo vào đây)}
-        % \includegraphics[height=3.5cm]{assets/kien_truc_tong_quan.png}
+        \includegraphics[height=4cm]{04_tai_lieu_ky_thuat/so_do/kien_truc_tong_quan.png}
     \end{center}
 \end{frame}
 
@@ -98,46 +99,37 @@
 \end{frame}
 
 % ---------------------------------------------
-% 3. CHỨNG MINH GIT - PHẦN 1: COMMIT
+% 3. CHỨNG MINH GIT - PHẦN 1: PULL REQUEST
 % ---------------------------------------------
-\begin{frame}{3. Triển khai phân công trên Git: Ai code người đó commit}
-    \textbf{Minh chứng việc phân công bằng lịch sử Commit trên Git:}
+\begin{frame}{3. Triển khai phân công trên Git: Pull Request}
+    \textbf{Minh chứng quy trình làm việc nhóm qua Pull Request trên Git:}
     \begin{itemize}
-        \item \textbf{Nhánh (Branch):} Các thành viên tạo nhánh tương ứng với phần được giao (vd: \texttt{feat-board}, \texttt{feat-ui}...).
-        \item \textbf{Lịch sử Commit:} Mỗi bạn chủ động commit phần code của mình.
+        \item Mỗi thành viên làm việc trên \textbf{nhánh riêng}, sau đó tạo \textbf{Pull Request} để gộp code vào nhánh chính.
+        \item Pull Request giúp cả nhóm \textbf{review code} trước khi merge, tránh lỗi và xung đột.
     \end{itemize}
     \vspace{0.2cm}
-    \begin{columns}
-        \begin{column}{0.5\textwidth}
-            \textbf{Commit của Huy \& Phúc (Logic/Board)}\\
-            \textit{(Chèn ảnh chụp Git log / Github cho thấy Huy và Phúc commit code bảng chơi/khối)}\\
-            % \includegraphics[width=\textwidth]{assets/commit_logic.png}
-        \end{column}
-        \begin{column}{0.5\textwidth}
-            \textbf{Commit của Anh \& Nam (UI/Input)}\\
-            \textit{(Chèn ảnh chụp Git log / Github cho thấy Anh và Nam commit giao diện/input)}\\
-            % \includegraphics[width=\textwidth]{assets/commit_ui.png}
-        \end{column}
-    \end{columns}
+    \begin{center}
+        \includegraphics[height=4.5cm]{assest/pull request.png}
+    \end{center}
 \end{frame}
 
 % ---------------------------------------------
 % 4. CHỨNG MINH GIT - PHẦN 2: CONFLICT
 % ---------------------------------------------
-\begin{frame}{4. Triển khai trên Git: Quản lý Code \& Giải quyết Conflict}
-    Khi ghép code từ nhiều thành viên (ví dụ: ghép Module Hiển thị vào Game Loop), Git xảy ra tình trạng \textbf{Merge Conflict}.\\
-    \vspace{0.2cm}
-    \textbf{Quá trình nhóm giải quyết Conflict thực tế:}
-    \begin{itemize}
-        \item \textbf{Nguyên nhân:} Bạn Long (Game Loop) và bạn Anh (Hiển thị) cùng đẩy code sửa trên file \texttt{main.cpp}.
-        \item \textbf{Xử lý:} Hai bạn xem xét các dòng code báo đỏ (HEAD và nhánh cần merge), chốt giữ lại vòng lặp của Long và hàm \texttt{draw()} của Anh.
-        \item \textbf{Kết quả:} \texttt{git add} và \texttt{git commit} để hoàn thành merge.
-    \end{itemize}
-    \vspace{0.2cm}
-    \begin{center}
-        \textit{(Chụp ảnh một đoạn code bị conflict hoặc log báo conflict trên terminal chèn vào đây)}\\
-        % \includegraphics[width=0.6\textwidth]{assets/git_conflict.png}
-    \end{center}
+\begin{frame}{4. Triển khai trên Git: Giải quyết Merge Conflict}
+    \begin{columns}
+        \begin{column}{0.42\textwidth}
+            \textbf{Tình huống thực tế (commit \texttt{9d07350}):}
+            \begin{itemize}
+                \item \textbf{File:} \texttt{tetris/main.cpp}, hàm \texttt{draw()}
+                \item \textbf{Nguyên nhân:} Nhánh local dùng \texttt{cout << "\textbackslash x1B[H"} (ANSI escape), nhánh remote dùng \texttt{SetConsoleCursorPosition} (Windows API).
+                \item \textbf{Giải pháp:} Giữ lại \texttt{SetConsoleCursorPosition} để tương thích Windows tốt hơn, rồi \texttt{git add \& commit}.
+            \end{itemize}
+        \end{column}
+        \begin{column}{0.56\textwidth}
+            \includegraphics[width=\textwidth]{assest/git_conflict.jpg}
+        \end{column}
+    \end{columns}
 \end{frame}
 
 % ---------------------------------------------
