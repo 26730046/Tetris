@@ -75,12 +75,48 @@ Túi được xáo bằng thuật toán \textbf{Fisher--Yates}: duyệt vị tr�
 Kết quả là trong mỗi túi, mỗi loại khối xuất hiện đúng một lần. Một khối lặp liên tiếp tối đa 2 lần (ở cuối túi này và đầu túi sau), và giữa hai lần xuất hiện của cùng một khối có nhiều nhất 12 khối khác.
 
 \subsection{Thuật toán kiểm tra va chạm (\texttt{canMove})}
-% [Gợi ý nội dung: Thuật toán duyệt qua ma trận 4x4 của khối hiện tại tại vị trí dự kiến (x + dx, y + dy), kiểm tra biên bàn cờ (xt < 1 || xt >= W-1 || yt >= H-1) và kiểm tra trùng lặp với các khối đã xếp trước đó]
-\textit{[Nội dung bổ sung sau: Mã giả, đoạn code minh họa và phân tích độ phức tạp thuật toán]}
+\hspace*{\parindent}Hàm \texttt{canMove(dx, dy)} dùng để kiểm tra xem khối hiện tại (\texttt{currentBlock}) có thể di chuyển một khoảng \texttt{(dx, dy)} hợp lệ hay không. Hàm này gọi lại \texttt{canPlace} để kiểm tra từng ô thuộc khối so với bảng \texttt{board}:
+
+\begin{lstlisting}[language=C++]
+bool canPlace(Block* block, int nx, int ny){
+    for (int i = 0; i < 4; i++ )
+        for (int j = 0; j < 4; j++ )
+            if (block->shape[i][j] != ' ') {
+                int xt = nx + j;
+                int yt = ny + i;
+                if (xt < 1 || xt >= W-1 || yt >= H-1 ) return false;
+                if (board[yt][xt] != ' ') return false;
+            }
+    return true;
+}
+
+bool canMove(int dx, int dy){
+    return canPlace(currentBlock, x + dx, y + dy);
+}
+\end{lstlisting}
+
+\textbf{Phân tích độ phức tạp:} Thuật toán lồng 2 vòng lặp nhưng chỉ duyệt qua kích thước cố định $4 \times 4$. Mỗi phần tử khác rỗng sẽ được kiểm tra với biên và với các ô đã có mặt trên bàn cờ. Do đó thời gian chạy là $O(1)$.
 
 \subsection{Thuật toán ghi nhận và xóa khối trên bảng (\texttt{block2Board}, \texttt{boardDelBlock})}
-% [Gợi ý nội dung: Quy trình gắn khối vào bảng khi chạm đáy hoặc xóa vị trí cũ khi đang rơi để vẽ vị trí mới]
-\textit{[Nội dung bổ sung sau: Phân tích xử lý cập nhật trạng thái bàn cờ]}
+Trong mỗi vòng lặp (frame), khối gạch đang rơi cần được xóa tại vị trí cũ và vẽ tại vị trí mới. Hàm \texttt{boardDelBlock} sẽ gán lại các phần tử bị chiếm bởi khối tại vị trí đó thành khoảng trắng, sau khi thay đổi toạ độ thì hàm \texttt{block2Board} ghi các ký tự của \texttt{currentBlock} vào \texttt{board}. Khi khối đã chạm đáy và không di chuyển được tiếp, \texttt{block2Board} cũng được dùng để gắn cố định khối vào bàn cờ:
+
+\begin{lstlisting}[language=C++]
+void block2Board(){
+    for (int i = 0; i < 4; i++ )
+        for (int j = 0; j < 4; j++ )
+            if (currentBlock->shape[i][j] != ' ')
+                board[y+i][x+j] = currentBlock->shape[i][j];
+}
+
+void boardDelBlock(){
+    for (int i = 0; i < 4; i++ )
+        for (int j = 0; j < 4; j++ )
+            if (currentBlock->shape[i][j] != ' ')
+                board[y+i][x+j] = ' ';
+}
+\end{lstlisting}
+
+Tương tự như thuật toán di chuyển, các hàm này cũng duyệt ma trận $4\times4$, độ phức tạp $O(1)$. Quá trình này giúp mô phỏng trực quan chuyển động tĩnh thành động của khối rơi.
 
 \subsection{Thuật toán kiểm tra và xóa dòng đầy (\texttt{removeLine})}
 
